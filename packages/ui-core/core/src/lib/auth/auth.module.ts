@@ -36,12 +36,12 @@ const socialLinks = [
 	{
 		url: environment.MICROSOFT_AUTH_LINK,
 		target: '_blank',
-		icon: 'grid'
+		icon: 'shield-outline'
 	},
 	{
 		url: environment.ENTRA_ID_AUTH_LINK,
 		target: '_blank',
-		icon: 'shield-outline',
+		icon: 'grid',
 		title: 'Entra ID'
 	}
 ];

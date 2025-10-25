@@ -90,12 +90,12 @@ export class SocialLinksComponent implements OnInit {
 			},
 			{
 				url: environment.MICROSOFT_AUTH_LINK,
-				icon: 'grid',
+				icon: 'shield-outline',
 				show: configs.microsoft_login
 			},
 			{
 				url: environment.ENTRA_ID_AUTH_LINK,
-				icon: 'shield-outline',
+				icon: 'grid',
 				title: 'Entra ID',
 				show: configs.entra_id_login
 			}

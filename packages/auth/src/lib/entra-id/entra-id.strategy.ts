@@ -5,6 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { AxiosResponse } from 'axios';
 import { Strategy, StrategyOptionsWithRequest } from 'passport-microsoft';
 import { firstValueFrom, map } from 'rxjs';
+import { Request } from 'express';
 
 /**
  * Entra ID (Azure AD) authentication strategy for enterprise SSO
@@ -27,7 +28,7 @@ export class EntraIdStrategy extends PassportStrategy(Strategy, 'entra-id') {
      * @param done - The callback to pass either the error or the user object.
      */
     async validate(
-        req: any,
+        req: Request,
         accessToken: string,
         refreshToken: string,
         profile: any,
