@@ -36,4 +36,7 @@ export interface IAppSetting {
 
     /** Flag indicating whether LinkedIn login is enabled. */
     linkedin_login: boolean;
+
+    /** Flag indicating whether Entra ID (Azure AD) login is enabled. */
+    entra_id_login: boolean;
 }

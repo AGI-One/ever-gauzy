@@ -30,6 +30,7 @@ export interface Environment {
 	GITHUB_AUTH_LINK: string;
 	TWITTER_AUTH_LINK: string;
 	MICROSOFT_AUTH_LINK: string;
+	ENTRA_ID_AUTH_LINK: string;
 	AUTH0_AUTH_LINK: string;
 
 	NO_INTERNET_LOGO: string;

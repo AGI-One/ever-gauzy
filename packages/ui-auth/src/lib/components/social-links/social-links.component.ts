@@ -26,17 +26,17 @@ export interface ISocialLink {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'ngx-social-links',
-    templateUrl: './social-links.component.html',
-    styleUrls: ['./social-links.component.scss'],
-    standalone: false
+	selector: 'ngx-social-links',
+	templateUrl: './social-links.component.html',
+	styleUrls: ['./social-links.component.scss'],
+	standalone: false
 })
 export class SocialLinksComponent implements OnInit {
 	/** */
 	public socialLinks$: Observable<ISocialLink[]>; // Observable for an array of social links
 	public configs: IAppConfig;
 
-	constructor(private readonly _appService: AppService) {}
+	constructor(private readonly _appService: AppService) { }
 
 	/**
 	 * Lifecycle hook called after Angular has initialized all data-bound properties of a directive.
@@ -92,6 +92,12 @@ export class SocialLinksComponent implements OnInit {
 				url: environment.MICROSOFT_AUTH_LINK,
 				icon: 'grid',
 				show: configs.microsoft_login
+			},
+			{
+				url: environment.ENTRA_ID_AUTH_LINK,
+				icon: 'shield-outline',
+				title: 'Entra ID',
+				show: configs.entra_id_login
 			}
 		].filter((item: ISocialLink) => !!item.show);
 	}

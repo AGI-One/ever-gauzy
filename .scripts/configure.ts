@@ -113,6 +113,7 @@ if (!isDocker) {
 		GITHUB_AUTH_LINK: API_BASE_URL + '/api/auth/github',
 		TWITTER_AUTH_LINK: API_BASE_URL + '/api/auth/twitter',
 		MICROSOFT_AUTH_LINK: API_BASE_URL + '/api/auth/microsoft',
+		ENTRA_ID_AUTH_LINK: API_BASE_URL + '/api/auth/entra-id',
 		AUTH0_AUTH_LINK: API_BASE_URL + '/api/auth/auth0',
 
 		NO_INTERNET_LOGO: '${env.NO_INTERNET_LOGO}',
@@ -262,6 +263,7 @@ if (!isDocker) {
 		GITHUB_AUTH_LINK: API_BASE_URL + '/api/auth/github',
 		TWITTER_AUTH_LINK: API_BASE_URL + '/api/auth/twitter',
 		MICROSOFT_AUTH_LINK: API_BASE_URL + '/api/auth/microsoft',
+		ENTRA_ID_AUTH_LINK: API_BASE_URL + '/api/auth/entra-id',
 		AUTH0_AUTH_LINK: API_BASE_URL + '/api/auth/auth0',
 
 		NO_INTERNET_LOGO: 'DOCKER_NO_INTERNET_LOGO',
@@ -377,10 +379,10 @@ if (!isProd) {
 // we always want first to remove old generated files (one of them is not needed for current build)
 try {
 	unlinkSync(`./packages/ui-config/src/lib/environments/environment.ts`);
-} catch {}
+} catch { }
 try {
 	unlinkSync(`./packages/ui-config/src/lib/environments/environment.prod.ts`);
-} catch {}
+} catch { }
 
 const envFileDest: string = isProd ? 'environment.prod.ts' : 'environment.ts';
 const envFileDestOther: string = !isProd ? 'environment.prod.ts' : 'environment.ts';

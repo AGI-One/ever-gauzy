@@ -31,6 +31,9 @@ export default registerAs('setting', () => ({
 	/** Flag indicating whether Microsoft login is enabled. */
 	microsoft_login: flagFeatures.FEATURE_MICROSOFT_LOGIN,
 
+	/** Flag indicating whether Entra ID (Azure AD) login is enabled. */
+	entra_id_login: flagFeatures.FEATURE_ENTRA_ID_LOGIN,
+
 	/** Flag indicating whether LinkedIn login is enabled. */
 	linkedin_login: flagFeatures.FEATURE_LINKEDIN_LOGIN
 }));

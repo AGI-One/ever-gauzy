@@ -5,6 +5,7 @@ import google from './google';
 import keycloak from './keycloak';
 import linkedin from './linkedin';
 import microsoft from './microsoft';
+import entraId from './entra-id';
 import setting from './setting';
 import twitter from './twitter';
 import jira from './jira';
@@ -13,4 +14,17 @@ import zapier from './zapier';
 /**
  * This array contains individual configuration modules for different social login providers.
  */
-export default [app, facebook, github, google, keycloak, linkedin, microsoft, setting, twitter, jira, zapier];
+export default [
+    app,
+    facebook,
+    github,
+    google,
+    keycloak,
+    linkedin,
+    microsoft,
+    entraId,
+    setting,
+    twitter,
+    jira,
+    zapier
+];

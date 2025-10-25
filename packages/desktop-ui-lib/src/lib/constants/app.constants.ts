@@ -57,5 +57,11 @@ export const socialLinks = [
 		url: env?.MICROSOFT_AUTH_LINK,
 		target: '_blank',
 		icon: 'grid'
+	},
+	{
+		url: env?.ENTRA_ID_AUTH_LINK,
+		target: '_blank',
+		icon: 'shield-outline',
+		title: 'Entra ID'
 	}
 ];

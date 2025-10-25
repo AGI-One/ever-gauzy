@@ -153,6 +153,7 @@ export enum FeatureEnum {
 	FEATURE_GOOGLE_LOGIN = 'FEATURE_GOOGLE_LOGIN',
 	FEATURE_TWITTER_LOGIN = 'FEATURE_TWITTER_LOGIN',
 	FEATURE_MICROSOFT_LOGIN = 'FEATURE_MICROSOFT_LOGIN',
+	FEATURE_ENTRA_ID_LOGIN = 'FEATURE_ENTRA_ID_LOGIN',
 	FEATURE_LINKEDIN_LOGIN = 'FEATURE_LINKEDIN_LOGIN'
 }
 
@@ -180,6 +181,9 @@ export interface IAuthenticationFlagFeatures {
 
 	/** Flag indicating whether Microsoft login is enabled. */
 	FEATURE_MICROSOFT_LOGIN: boolean;
+
+	/** Flag indicating whether Entra ID (Azure AD) login is enabled. */
+	FEATURE_ENTRA_ID_LOGIN: boolean;
 
 	/** Flag indicating whether LinkedIn login is enabled. */
 	FEATURE_LINKEDIN_LOGIN: boolean;

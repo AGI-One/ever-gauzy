@@ -38,6 +38,9 @@ export const flagFeatures: IAuthenticationFlagFeatures = {
 	/** Flag indicating whether Microsoft login is enabled. */
 	FEATURE_MICROSOFT_LOGIN: featureEnabled(FeatureEnum.FEATURE_MICROSOFT_LOGIN),
 
+	/** Flag indicating whether Entra ID (Azure AD) login is enabled. */
+	FEATURE_ENTRA_ID_LOGIN: featureEnabled(FeatureEnum.FEATURE_ENTRA_ID_LOGIN),
+
 	/** Flag indicating whether LinkedIn login is enabled. */
 	FEATURE_LINKEDIN_LOGIN: featureEnabled(FeatureEnum.FEATURE_LINKEDIN_LOGIN)
 };
@@ -49,7 +52,7 @@ export const flagFeatures: IAuthenticationFlagFeatures = {
  */
 @Injectable()
 export class FeatureFlagEnabledGuard implements CanActivate {
-	constructor(private readonly _reflector: Reflector) {}
+	constructor(private readonly _reflector: Reflector) { }
 
 	/**
 	 *

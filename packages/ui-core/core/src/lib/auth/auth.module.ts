@@ -37,6 +37,12 @@ const socialLinks = [
 		url: environment.MICROSOFT_AUTH_LINK,
 		target: '_blank',
 		icon: 'grid'
+	},
+	{
+		url: environment.ENTRA_ID_AUTH_LINK,
+		target: '_blank',
+		icon: 'shield-outline',
+		title: 'Entra ID'
 	}
 ];
 
@@ -58,4 +64,4 @@ const socialLinks = [
 		ElectronService
 	]
 })
-export class AuthModule {}
+export class AuthModule { }
