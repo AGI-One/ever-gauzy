@@ -130,7 +130,7 @@ export interface IUserCodeInput {
 	code: string;
 }
 
-export interface IUserLoginInput extends IUserEmailInput, IUserPasswordInput {}
+export interface IUserLoginInput extends IUserEmailInput, IUserPasswordInput { }
 
 export interface IDefaultTeam {
 	defaultTeamId?: ID;
@@ -222,7 +222,8 @@ export enum LanguagesEnum {
 	ITALIAN = 'it',
 	DUTCH = 'nl',
 	POLISH = 'pl',
-	ARABIC = 'ar'
+	ARABIC = 'ar',
+	VIETNAMESE = 'vi'
 }
 
 export enum ComponentLayoutStyleEnum {

@@ -33,10 +33,10 @@ export enum ListsInputTypeEnum {
 
 export interface IOrganization
 	extends IBasePerTenantEntityModel,
-		IRelationalImageAsset,
-		IOrganizationAgentSetting,
-		IOrganizationTimerSetting,
-		ITaggable {
+	IRelationalImageAsset,
+	IOrganizationAgentSetting,
+	IOrganizationTimerSetting,
+	ITaggable {
 	name: string;
 	isDefault: boolean;
 	profile_link: string;
@@ -210,7 +210,8 @@ export enum RegionCodeEnum {
 	ITALIAN = 'it',
 	DUTCH = 'nl',
 	POLISH = 'pl',
-	ARABIC = 'ar'
+	ARABIC = 'ar',
+	VIETNAMESE = 'vi'
 }
 
 export enum RegionsEnum {

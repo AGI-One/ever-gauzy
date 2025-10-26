@@ -26,5 +26,14 @@
 		"**/public/**/*.pdf": true
 	},
 	"angular.enable-strict-mode-prompt": false,
-	"nxConsole.generateAiAgentRules": true
+	"nxConsole.generateAiAgentRules": true,
+	"i18n-ally.localesPaths": [
+		"packages/ui-core/i18n",
+		"packages/core/src/lib/i18n",
+		"packages/core/src/lib/language",
+		"packages/desktop-ui-lib/src/lib/language",
+		"packages/ui-core/i18n/assets/i18n",
+		"packages/ui-core/shared/src/lib/language",
+		"packages/ui-core/core/src/lib/services/language"
+	]
 }
