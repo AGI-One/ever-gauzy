@@ -607,5 +607,15 @@ export const DEFAULT_FEATURES: IFeatureCreateInput[] = [
 		isEnabled: features.FEATURE_ROLES_PERMISSION,
 		icon: 'home-outline',
 		status: 'primary'
+	},
+	{
+		name: 'Platform Administration',
+		code: FeatureEnum.FEATURE_PLATFORM_ADMIN,
+		description: 'Platform-level administration for managing customer tenants',
+		image: 'platform-admin.png',
+		link: 'platform-admin',
+		isEnabled: features.FEATURE_PLATFORM_ADMIN ?? true,
+		icon: 'shield-outline',
+		status: 'info'
 	}
 ];

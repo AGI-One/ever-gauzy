@@ -5374,6 +5374,10 @@
 			"CREATE": "Create Tenant",
 			"CREATE_TENANT": "Create New Tenant",
 			"REFRESH": "Refresh List",
+			"DETAILS": {
+				"TITLE": "Tenant Details - '{{ name }}'",
+				"EDIT": " Edit Tenant '{{ name }}' Details"
+			},
 			"EDIT": {
 				"TITLE": "Edit Tenant '{{ name }}'",
 				"SUBTITLE": "Update tenant details and super admin information.",

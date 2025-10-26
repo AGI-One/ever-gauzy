@@ -7,7 +7,7 @@ import { RequestContext } from './../../core/context';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-	constructor(private readonly _reflector: Reflector) {}
+	constructor(private readonly _reflector: Reflector) { }
 
 	/**
 	 * Determines if the user associated with the request has the required roles.
@@ -16,6 +16,13 @@ export class RoleGuard implements CanActivate {
 	 */
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		console.log('RoleGuard canActivate called');
+
+		// 🌟 PLATFORM ADMIN BYPASS: Platform Admin has access to everything
+		const currentUser = RequestContext.currentUser();
+		if (currentUser && currentUser.role?.name === 'PLATFORM_ADMIN') {
+			console.log('🚀 Platform Admin detected - bypassing role checks');
+			return true;
+		}
 
 		// Retrieve permissions from metadata
 		const targets: Array<Function | Type<any>> = [context.getHandler(), context.getClass()];

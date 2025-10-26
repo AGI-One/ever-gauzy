@@ -56,6 +56,10 @@ export type Env = Readonly<{
 	DEMO_SUPER_ADMIN_EMAIL?: string;
 	DEMO_SUPER_ADMIN_PASSWORD?: string;
 
+	// Default Platform Admin Credentials
+	PLATFORM_ADMIN_EMAIL?: string;
+	PLATFORM_ADMIN_PASSWORD?: string;
+
 	// Default Admin Credentials
 	DEMO_ADMIN_EMAIL?: string;
 	DEMO_ADMIN_PASSWORD?: string;
@@ -211,6 +215,9 @@ export const env: Env = cleanEnv(
 
 		DEMO_SUPER_ADMIN_EMAIL: str({ default: 'admin@ever.co' }),
 		DEMO_SUPER_ADMIN_PASSWORD: str({ default: 'admin' }),
+
+		PLATFORM_ADMIN_EMAIL: str({ default: 'platform-admin@gauzy.co' }),
+		PLATFORM_ADMIN_PASSWORD: str({ default: 'PlatformAdmin@123' }),
 
 		DEMO_ADMIN_EMAIL: str({ default: 'local.admin@ever.co' }),
 		DEMO_ADMIN_PASSWORD: str({ default: 'admin' }),

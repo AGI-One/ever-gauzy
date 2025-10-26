@@ -26,6 +26,11 @@ export const appRoutes: Routes = [
 		canActivate: [AuthGuard, AppModuleGuard]
 	},
 	{
+		path: 'platform-admin',
+		loadChildren: () => import('./pages/platform-admin/platform-admin.module').then((m) => m.PlatformAdminModule),
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'share',
 		loadChildren: () => import('@gauzy/plugin-public-layout-ui').then((m) => m.PublicLayoutModule),
 		canActivate: []

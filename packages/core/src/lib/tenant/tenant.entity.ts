@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { JoinColumn, RelationId } from 'typeorm';
-import { IsNumber, IsOptional, IsUUID, Max, Min } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsUUID, Max, Min } from 'class-validator';
 import { DEFAULT_STANDARD_WORK_HOURS_PER_DAY } from '@gauzy/constants';
-import { ITenant, IOrganization, IRolePermission, IFeatureOrganization, ID, IImageAsset } from '@gauzy/contracts';
-import { BaseEntity, FeatureOrganization, ImageAsset, Organization, RolePermission } from '../core/entities/internal';
+import { ITenant, IOrganization, IRolePermission, IFeatureOrganization, ID, IImageAsset, IUser } from '@gauzy/contracts';
+import { BaseEntity, FeatureOrganization, ImageAsset, Organization, RolePermission, User } from '../core/entities/internal';
 import {
 	ColumnIndex,
 	MultiORMColumn,
@@ -23,6 +23,17 @@ export class Tenant extends BaseEntity implements ITenant {
 	@ApiPropertyOptional({ type: () => String })
 	@MultiORMColumn({ nullable: true })
 	logo?: string;
+
+	/**
+	 * Subscription expiration date
+	 * When set, tenant access will be blocked after this date
+	 */
+	@ApiPropertyOptional({ type: () => Date })
+	@IsOptional()
+	@IsDate()
+	@ColumnIndex()
+	@MultiORMColumn({ nullable: true, type: 'timestamp' })
+	expiresAt?: Date;
 
 	/**
 	 * Standard work hours per day for the tenant.
@@ -45,6 +56,27 @@ export class Tenant extends BaseEntity implements ITenant {
 	| @ManyToOne
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Platform Admin user who created this tenant
+	 */
+	@MultiORMManyToOne(() => User, {
+		/** Indicates if the relation column value can be nullable or not. */
+		nullable: true,
+
+		/** Database cascade action on delete. */
+		onDelete: 'SET NULL'
+	})
+	@JoinColumn()
+	createdBy?: IUser;
+
+	@ApiPropertyOptional({ type: () => String })
+	@IsOptional()
+	@IsUUID()
+	@RelationId((it: Tenant) => it.createdBy)
+	@ColumnIndex()
+	@MultiORMColumn({ nullable: true, relationId: true })
+	createdById?: ID;
 
 	/**
 	 * ImageAsset

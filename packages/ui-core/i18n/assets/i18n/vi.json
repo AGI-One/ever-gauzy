@@ -5336,6 +5336,7 @@
 	"PLATFORM_ADMIN": {
 		"TITLE": "Quản Trị Hệ Thống",
 		"MENU": {
+			"TITLE": "Quản Trị Hệ Thống",
 			"DASHBOARD": "Bảng Điều Khiển",
 			"TENANTS": "Danh Sách Tenant"
 		},

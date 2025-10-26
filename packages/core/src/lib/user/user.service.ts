@@ -250,16 +250,20 @@ export class UserService extends TenantAwareCrudService<User> {
 	async getIfExists(id: string): Promise<User | undefined> {
 		switch (this.ormType) {
 			case MultiORMEnum.MikroORM:
-				return await this.mikroOrmUserRepository.findOne({ id });
+				return await this.mikroOrmUserRepository.findOne(
+					{ id },
+					{ populate: ['role'] }
+				);
 
 			case MultiORMEnum.TypeORM:
-				return await this.typeOrmRepository.findOneBy({ id });
+				return await this.typeOrmRepository.findOne({
+					where: { id },
+					relations: ['role']
+				});
 			default:
 				throw new Error(`Not implemented for ${this.ormType}`);
 		}
-	}
-
-	/**
+	}	/**
 	 * Retrieves a user with the given third party ID if it exists.
 	 * @param {string} thirdPartyId - The third party ID of the user to retrieve.
 	 * @returns {Promise<User | undefined>} - A promise that resolves to the user if it exists, otherwise undefined.
@@ -267,10 +271,16 @@ export class UserService extends TenantAwareCrudService<User> {
 	async getIfExistsThirdParty(thirdPartyId: string): Promise<User | undefined> {
 		switch (this.ormType) {
 			case MultiORMEnum.MikroORM:
-				return await this.mikroOrmUserRepository.findOne({ thirdPartyId });
+				return await this.mikroOrmUserRepository.findOne(
+					{ thirdPartyId },
+					{ populate: ['role'] }
+				);
 
 			case MultiORMEnum.TypeORM:
-				return await this.typeOrmRepository.findOneBy({ thirdPartyId });
+				return await this.typeOrmRepository.findOne({
+					where: { thirdPartyId },
+					relations: ['role']
+				});
 			default:
 				throw new Error(`Not implemented for ${this.ormType}`);
 		}
@@ -349,15 +359,22 @@ export class UserService extends TenantAwareCrudService<User> {
 				}
 			}
 
-			// Restrict updates to Super Admin role without appropriate permission
-			if (user.role.name === RolesEnum.SUPER_ADMIN) {
-				if (!RequestContext.hasPermission(PermissionsEnum.SUPER_ADMIN_EDIT)) {
-					throw new ForbiddenException();
+			// Restrict updates to Platform Admin role
+			// Platform Admin role can only be assigned to users in the Platform Admin tenant/org
+			if (entity.role && entity.role.name === RolesEnum.PLATFORM_ADMIN) {
+				const { canAssignPlatformAdminRole } = await import('../platform-admin/platform-admin.seed');
+				// Get DataSource from repository
+				const dataSource = this.typeOrmUserRepository.manager.connection;
+				const validation = await canAssignPlatformAdminRole(dataSource, id as string);
+
+				if (!validation.valid) {
+					throw new ForbiddenException(
+						validation.reason || 'Cannot assign Platform Admin role to this user'
+					);
 				}
 			}
 
 			// Restrict users from updating their own role
-
 			if (currentUserId === id) {
 				if (entity.role && entity.role.id !== currentRoleId) {
 					throw new ForbiddenException();

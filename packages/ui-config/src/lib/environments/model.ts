@@ -61,6 +61,9 @@ export interface Environment {
 	DEMO_SUPER_ADMIN_EMAIL?: string;
 	DEMO_SUPER_ADMIN_PASSWORD?: string;
 
+	PLATFORM_ADMIN_EMAIL?: string;
+	PLATFORM_ADMIN_PASSWORD?: string;
+
 	DEMO_ADMIN_EMAIL?: string;
 	DEMO_ADMIN_PASSWORD?: string;
 

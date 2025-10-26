@@ -29,7 +29,24 @@ export const createRolePermissions = async (
 		// Loop through each default role permission configuration
 		for (const { role: roleEnum, defaultEnabledPermissions } of DEFAULT_ROLE_PERMISSIONS) {
 			// Find the corresponding role for the current tenant
-			const role = roles.find((dbRole: IRole) => dbRole.name === roleEnum && dbRole.tenant.name === tenant.name);
+			// Special handling for PLATFORM_ADMIN: it has its own tenant, so match by tenant ID
+			let role: IRole | undefined;
+
+			if (roleEnum === 'PLATFORM_ADMIN') {
+				// For PLATFORM_ADMIN, find role that belongs to current tenant (Platform Admin tenant)
+				role = roles.find((dbRole: IRole) =>
+					dbRole.name === roleEnum &&
+					dbRole.tenant &&
+					dbRole.tenant.id === tenant.id
+				);
+			} else {
+				// For other roles, match by tenant name as before
+				role = roles.find((dbRole: IRole) =>
+					dbRole.name === roleEnum &&
+					dbRole.tenant &&
+					dbRole.tenant.name === tenant.name
+				);
+			}
 
 			if (role) {
 				// Filter permissions, excluding denied permissions in DEMO mode

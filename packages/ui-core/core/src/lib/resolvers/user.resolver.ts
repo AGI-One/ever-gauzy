@@ -14,8 +14,8 @@ export const UserResolver: ResolveFn<Observable<IUser | null>> = (): Observable<
 	const _usersService = inject(UsersService);
 	const _errorHandlingService = inject(ErrorHandlingService);
 
-	// Fetch user data
-	const user$ = from(_usersService.getMe());
+	// Fetch user data with role relation
+	const user$ = from(_usersService.getMe(['role']));
 
 	// Fetch user data from the service
 	return user$.pipe(

@@ -3,7 +3,7 @@ import { combineLatest } from 'rxjs';
 import { filter, startWith, tap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FeatureEnum, IOrganization, PermissionsEnum } from '@gauzy/contracts';
+import { FeatureEnum, IOrganization, PermissionsEnum, RolesEnum } from '@gauzy/contracts';
 import { distinctUntilChange } from '@gauzy/ui-core/common';
 import { TranslationBaseComponent } from '@gauzy/ui-core/i18n';
 import {
@@ -73,7 +73,11 @@ export class BaseNavMenuComponent extends TranslationBaseComponent implements On
 	 * @returns An array of NavMenuSectionItem objects representing the main menu.
 	 */
 	private _getMainMenu(): NavMenuSectionItem[] {
-		return [
+		const user = this._store.user;
+		const isPlatformAdmin = user && user.role?.name === RolesEnum.PLATFORM_ADMIN;
+
+		// Base menu items for all users (including Platform Admin)
+		const baseMenuItems: NavMenuSectionItem[] = [
 			{
 				id: 'dashboards',
 				title: 'Dashboards',
@@ -916,6 +920,46 @@ export class BaseNavMenuComponent extends TranslationBaseComponent implements On
 				]
 			}
 		];
+
+		// If Platform Admin, add Platform Admin menu item at the beginning
+		// Platform Admin still has access to all regular menus (tenant + organization features)
+		// plus additional Platform Admin specific menu
+		if (isPlatformAdmin) {
+			const platformAdminMenuItem: NavMenuSectionItem = {
+				id: 'platform-admin',
+				title: 'Platform Admin',
+				icon: 'fas fa-shield-alt',
+				data: {
+					translationKey: 'PLATFORM_ADMIN.MENU.TITLE'
+				},
+				items: [
+					{
+						id: 'platform-admin-dashboard',
+						title: 'Dashboard',
+						icon: 'fas fa-chart-line',
+						link: '/platform-admin/dashboard',
+						pathMatch: 'prefix',
+						data: {
+							translationKey: 'PLATFORM_ADMIN.MENU.DASHBOARD'
+						}
+					},
+					{
+						id: 'platform-admin-tenants',
+						title: 'Tenants',
+						icon: 'fas fa-building',
+						link: '/platform-admin/tenants',
+						pathMatch: 'prefix',
+						data: {
+							translationKey: 'PLATFORM_ADMIN.MENU.TENANTS'
+						}
+					}
+				]
+			};
+			// Return Platform Admin menu + all base menus (total 11 items)
+			return [platformAdminMenuItem, ...baseMenuItems];
+		}
+
+		return baseMenuItems;
 	}
 
 	/**
@@ -1185,5 +1229,5 @@ export class BaseNavMenuComponent extends TranslationBaseComponent implements On
 		return isHidden;
 	}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void { }
 }
