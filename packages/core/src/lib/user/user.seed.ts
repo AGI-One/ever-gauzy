@@ -22,7 +22,8 @@ import { User } from './user.entity';
 import { getUserDummyImage, Role } from '../core';
 import { DEFAULT_EMPLOYEES, DEFAULT_EVER_EMPLOYEES } from '../employee/default-employees';
 import { DEFAULT_CANDIDATES } from '../candidate/default-candidates';
-import { DEFAULT_SUPER_ADMINS, DEFAULT_ADMINS } from './default-users';
+import { DEFAULT_SUPER_ADMINS, DEFAULT_ADMINS, DEFAULT_PLATFORM_ADMINS } from './default-users';
+import { DEFAULT_EVER_TENANT } from '../tenant/default-tenants';
 
 export const createDefaultAdminUsers = async (
 	dataSource: DataSource,
@@ -30,22 +31,27 @@ export const createDefaultAdminUsers = async (
 ): Promise<{
 	defaultSuperAdminUsers: IUser[];
 	defaultAdminUsers: IUser[];
+	defaultPlatformAdminUsers: IUser[];
 }> => {
 	// Super Admin Users
 	const _defaultSuperAdminUsers: Promise<IUser[]> = seedSuperAdminUsers(dataSource, tenant);
 	// Admin Users
 	const _defaultAdminUsers: Promise<IUser[]> = seedAdminUsers(dataSource, tenant);
+	// Platform Admin Users (only for 'Ever' tenant)
+	const _defaultPlatformAdminUsers: Promise<IUser[]> = seedPlatformAdminUsers(dataSource, tenant);
 
-	const [defaultSuperAdminUsers, defaultAdminUsers] = await Promise.all([
+	const [defaultSuperAdminUsers, defaultAdminUsers, defaultPlatformAdminUsers] = await Promise.all([
 		_defaultSuperAdminUsers,
-		_defaultAdminUsers
+		_defaultAdminUsers,
+		_defaultPlatformAdminUsers
 	]);
 
-	await insertUsers(dataSource, [...defaultSuperAdminUsers, ...defaultAdminUsers]);
+	await insertUsers(dataSource, [...defaultSuperAdminUsers, ...defaultAdminUsers, ...defaultPlatformAdminUsers]);
 
 	return {
 		defaultSuperAdminUsers,
-		defaultAdminUsers
+		defaultAdminUsers,
+		defaultPlatformAdminUsers
 	};
 };
 
@@ -241,6 +247,33 @@ const seedAdminUsers = async (dataSource: DataSource, tenant: ITenant): Promise<
 		admins.push(adminUser);
 	}
 	return Promise.all(admins);
+};
+
+const seedPlatformAdminUsers = async (dataSource: DataSource, tenant: ITenant): Promise<IUser[]> => {
+	// Only create Platform Admin users for 'Ever' tenant
+	if (tenant.name !== DEFAULT_EVER_TENANT) {
+		return [];
+	}
+
+	const platformAdmins: Promise<IUser>[] = [];
+
+	const { id: tenantId } = tenant;
+	const platformAdminRole = await dataSource.manager.findOneBy(Role, {
+		tenantId,
+		name: RolesEnum.PLATFORM_ADMIN
+	});
+
+	if (!platformAdminRole) {
+		console.warn(`Platform Admin role not found for tenant ${tenant.name}`);
+		return [];
+	}
+
+	// Generate default platform admins
+	for (const platformAdmin of DEFAULT_PLATFORM_ADMINS) {
+		const platformAdminUser: Promise<IUser> = generateDefaultUser(platformAdmin, platformAdminRole, tenant);
+		platformAdmins.push(platformAdminUser);
+	}
+	return Promise.all(platformAdmins);
 };
 
 const seedDefaultEmployeeUsers = async (

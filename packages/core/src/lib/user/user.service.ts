@@ -360,9 +360,9 @@ export class UserService extends TenantAwareCrudService<User> {
 			}
 
 			// Restrict updates to Platform Admin role
-			// Platform Admin role can only be assigned to users in the Platform Admin tenant/org
+			// Platform Admin role can only be assigned to users in the 'Ever' tenant
 			if (entity.role && entity.role.name === RolesEnum.PLATFORM_ADMIN) {
-				const { canAssignPlatformAdminRole } = await import('../platform-admin/platform-admin.seed');
+				const { canAssignPlatformAdminRole } = await import('../platform-admin/platform-admin.utils');
 				// Get DataSource from repository
 				const dataSource = this.typeOrmUserRepository.manager.connection;
 				const validation = await canAssignPlatformAdminRole(dataSource, id as string);

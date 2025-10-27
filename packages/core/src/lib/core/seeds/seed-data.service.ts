@@ -248,7 +248,7 @@ export class SeedDataService {
 	randomTenantOrganizationsMap: Map<ITenant, IOrganization[]>;
 	randomOrganizationEmployeesMap: Map<IOrganization, IEmployee[]>;
 
-	constructor(private readonly moduleRef: ModuleRef, private readonly configService: ConfigService) {}
+	constructor(private readonly moduleRef: ModuleRef, private readonly configService: ConfigService) { }
 
 	/**
 	 * This config is applied only for `yarn seed:*` type calls because
@@ -491,11 +491,12 @@ export class SeedDataService {
 
 		await this.tryExecute('Skills', createDefaultSkills(this.dataSource, this.tenant, this.defaultOrganization));
 
-		const { defaultSuperAdminUsers, defaultAdminUsers } = await createDefaultAdminUsers(
+		const { defaultSuperAdminUsers, defaultAdminUsers, defaultPlatformAdminUsers } = await createDefaultAdminUsers(
 			this.dataSource,
 			this.tenant
 		);
 		this.superAdminUsers.push(...(defaultSuperAdminUsers as IUser[]));
+		this.superAdminUsers.push(...(defaultPlatformAdminUsers as IUser[])); // Platform Admin has same privileges as Super Admin
 
 		const { defaultEmployeeUsers } = await createDefaultEmployeesUsers(this.dataSource, this.tenant);
 

@@ -59,15 +59,28 @@
 			"options": {
 				"buildTarget": "api:build",
 				"inspect": true,
-				"port": 9229
+				"port": 9229,
+				"watch": false
 			},
 			"configurations": {
 				"development": {
-					"buildTarget": "api:build:development"
+					"buildTarget": "api:build:development",
+					"watch": false
 				},
 				"production": {
-					"buildTarget": "api:build:production"
+					"buildTarget": "api:build:production",
+					"watch": false
 				}
+			}
+		},
+		"serve:dev": {
+			"executor": "@nx/js:node",
+			"defaultConfiguration": "development",
+			"options": {
+				"buildTarget": "api:build:development",
+				"inspect": true,
+				"port": 9229,
+				"watch": true
 			}
 		},
 		"lint": {

@@ -23,7 +23,7 @@ export class UserOrganizationDeleteHandler implements ICommandHandler<UserOrgani
 		private readonly _userOrganizationService: UserOrganizationService,
 		private readonly _userService: UserService,
 		private readonly _roleService: RoleService
-	) {}
+	) { }
 
 	/**
 	 * Executes a command to delete a user organization association.

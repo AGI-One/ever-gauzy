@@ -24,7 +24,7 @@ export class OrganizationPermissionGuard implements CanActivate {
 		readonly _reflector: Reflector,
 		readonly _typeOrmEmployeeRepository: TypeOrmEmployeeRepository,
 		readonly _mikroOrmEmployeeRepository: MikroOrmEmployeeRepository
-	) {}
+	) { }
 
 	/**
 	 * Checks if the user is authorized based on specified permissions.

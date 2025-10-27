@@ -203,10 +203,10 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 			invitationExpirationPeriod === InvitationExpirationEnum.NEVER
 				? null
 				: addDays(
-						new Date(),
-						Number(invitationExpirationPeriod ?? organization.inviteExpiryPeriod) ||
-							DEFAULT_INVITE_EXPIRY_PERIOD
-				  );
+					new Date(),
+					Number(invitationExpirationPeriod ?? organization.inviteExpiryPeriod) ||
+					DEFAULT_INVITE_EXPIRY_PERIOD
+				);
 
 		// Build the overall query options.
 		const queryOptions = {
@@ -613,8 +613,8 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 							status: InviteStatusEnum.INVITED,
 							...(payload['code']
 								? {
-										code: payload['code']
-								  }
+									code: payload['code']
+								}
 								: {})
 						});
 						qb.andWhere([
@@ -697,18 +697,18 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 			return await super.findAll({
 				...(options && options.skip
 					? {
-							skip: options.take * (options.skip - 1)
-					  }
+						skip: options.take * (options.skip - 1)
+					}
 					: {}),
 				...(options && options.take
 					? {
-							take: options.take
-					  }
+						take: options.take
+					}
 					: {}),
 				...(options && options.relations
 					? {
-							relations: options.relations
-					  }
+						relations: options.relations
+					}
 					: {}),
 				where: {
 					tenantId: RequestContext.currentTenantId(),
@@ -717,14 +717,14 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 					...(isNotEmpty(options) && isNotEmpty(options.where)
 						? isNotEmpty(options.where.role)
 							? {
-									role: {
-										name: In(
-											Array.isArray(options.where.role)
-												? options.where.role
-												: [options.where.role]
-										)
-									}
-							  }
+								role: {
+									name: In(
+										Array.isArray(options.where.role)
+											? options.where.role
+											: [options.where.role]
+									)
+								}
+							}
 							: {} // No default filter
 						: {}),
 					/**
@@ -733,10 +733,10 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 					...(isNotEmpty(options) && isNotEmpty(options.where)
 						? isNotEmpty(options.where.projects)
 							? {
-									projects: {
-										id: In(options.where.projects.id)
-									}
-							  }
+								projects: {
+									id: In(options.where.projects.id)
+								}
+							}
 							: {}
 						: {}),
 					/**
@@ -745,10 +745,10 @@ export class InviteService extends TenantAwareCrudService<Invite> {
 					...(isNotEmpty(options) && isNotEmpty(options.where)
 						? isNotEmpty(options.where.teams)
 							? {
-									teams: {
-										id: In(options.where.teams.id)
-									}
-							  }
+								teams: {
+									id: In(options.where.teams.id)
+								}
+							}
 							: {}
 						: {})
 				}
