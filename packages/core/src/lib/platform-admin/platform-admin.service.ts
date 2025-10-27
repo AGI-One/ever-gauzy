@@ -8,6 +8,7 @@ import { RequestContext } from '../core/context';
 import { CreateTenantDTO, UpdateTenantDTO } from './dto';
 import { UserService } from '../user/user.service';
 import { RoleService } from '../role/role.service';
+import { TenantService } from '../tenant/tenant.service';
 import { TenantRoleBulkCreateCommand } from '../role/commands';
 
 @Injectable()
@@ -27,6 +28,7 @@ export class PlatformAdminService {
 
         private readonly userService: UserService,
         private readonly roleService: RoleService,
+        private readonly tenantService: TenantService,
         private readonly commandBus: CommandBus
     ) { }
 
@@ -235,6 +237,10 @@ export class PlatformAdminService {
 
         // Create Role/Permissions for the newly created tenant
         await this.commandBus.execute(new TenantRoleBulkCreateCommand([savedTenant]));
+
+        // Execute tenant initialization tasks (features, statuses, sizes, priorities, issue types, settings)
+        // This ensures the tenant has all necessary data like the onboarding flow
+        await this.tenantService.executeTenantUpdateTasks(savedTenant);
 
         // Find SUPER_ADMIN role for this specific tenant using direct repository query
         // to avoid TenantAwareCrudService auto-filtering by RequestContext

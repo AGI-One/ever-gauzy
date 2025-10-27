@@ -6,13 +6,15 @@ import { PlatformAdminService } from './platform-admin.service';
 import { Tenant, User, Organization, Role } from '../core/entities/internal';
 import { UserModule } from '../user/user.module';
 import { RoleModule } from '../role/role.module';
+import { TenantModule } from '../tenant/tenant.module';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([Tenant, User, Organization, Role]),
 		CqrsModule,
 		UserModule,
-		RoleModule
+		RoleModule,
+		TenantModule
 	],
 	controllers: [PlatformAdminController],
 	providers: [PlatformAdminService],
