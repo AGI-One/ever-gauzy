@@ -570,7 +570,7 @@ export class UserService extends TenantAwareCrudService<User> {
 	 * @param password The password to hash.
 	 * @returns A promise resolving to the bcrypt hash of the password.
 	 */
-	private async getPasswordHash(password: string): Promise<string> {
+	public async getPasswordHash(password: string): Promise<string> {
 		try {
 			// Generate bcrypt hash using provided password and salt rounds from environment
 			return await bcrypt.hash(password, env.USER_PASSWORD_BCRYPT_SALT_ROUNDS);
