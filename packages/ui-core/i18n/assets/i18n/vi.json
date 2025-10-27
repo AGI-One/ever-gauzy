@@ -5369,10 +5369,39 @@
 		},
 		"TENANTS": {
 			"TITLE": "Quản Lý Tenant",
+			"SUBTITLE": "Tạo, xem, chỉnh sửa và quản lý tenant trên nền tảng.",
 			"LIST": "Danh Sách Tenant",
-			"CREATE": "Tạo Tenant",
+			"CREATE_TENANT": "Tạo Tenant Mới",
+			"REFRESH": "Làm Mới Danh Sách",
+			"CREATE": {
+				"TITLE": "Tạo Tenant Mới",
+				"SUBTITLE": "Tạo tenant mới với tài khoản super admin",
+				"TENANT_INFO": "Thông Tin Tenant",
+				"TENANT_NAME": "Tên Tenant",
+				"TENANT_NAME_PLACEHOLDER": "Nhập tên tenant",
+				"LOGO_URL": "URL Logo",
+				"LOGO_URL_PLACEHOLDER": "Nhập URL logo (tùy chọn)",
+				"EXPIRES_AT": "Ngày Hết Hạn",
+				"EXPIRES_AT_HINT": "Để trống nếu không có thời hạn. Định dạng: dd/mm/yyyy, --:--",
+				"SUPER_ADMIN_INFO": "Thông Tin Super Admin",
+				"FIRST_NAME": "Tên",
+				"FIRST_NAME_PLACEHOLDER": "Nhập tên (tùy chọn)",
+				"LAST_NAME": "Họ",
+				"LAST_NAME_PLACEHOLDER": "Nhập họ (tùy chọn)",
+				"EMAIL": "Email",
+				"EMAIL_PLACEHOLDER": "Nhập email super admin",
+				"PASSWORD": "Mật Khẩu",
+				"PASSWORD_PLACEHOLDER": "Nhập mật khẩu",
+				"CANCEL": "Hủy",
+				"CREATE_TENANT": "Tạo Tenant",
+				"ERRORS": {
+					"NAME_REQUIRED": "Tên tenant là bắt buộc",
+					"EMAIL_INVALID": "Vui lòng nhập email hợp lệ",
+					"PASSWORD_MIN_LENGTH": "Mật khẩu phải có ít nhất 8 ký tự"
+				}
+			},
 			"EDIT": {
-				"TITLE": "Chỉnh Sửa Tenant '{{ name }}'",
+				"TITLE": "Chỉnh Sửa Tenant",
 				"SUBTITLE": "Cập nhật thông tin tenant và super admin.",
 				"TENANT_INFO": "Thông Tin Tenant",
 				"TENANT_NAME": "Tên Tenant",
@@ -5383,8 +5412,47 @@
 				"EXPIRES_AT": "Ngày Hết Hạn",
 				"IS_ACTIVE": "Trạng Thái Hoạt Động",
 				"CANCEL": "Hủy",
-				"UPDATE": "Cập Nhật Tenant"
+				"UPDATE": "Cập Nhật Tenant",
+				"UPDATE_TENANT": "Cập Nhật Tenant"
 			},
+			"DETAILS": {
+				"TITLE": "Chi Tiết Tenant",
+				"EDIT": "Chỉnh Sửa Tenant",
+				"BASIC_INFO": "Thông Tin Cơ Bản",
+				"ID": "ID Tenant",
+				"CREATED_AT": "Ngày Tạo",
+				"UPDATED_AT": "Ngày Cập Nhật",
+				"EXPIRES_AT": "Ngày Hết Hạn",
+				"STATISTICS": "Thống Kê",
+				"TOTAL_USERS": "Tổng Số Người Dùng",
+				"TOTAL_ORGANIZATIONS": "Tổng Số Tổ Chức",
+				"DAYS_UNTIL_EXPIRATION": "Số Ngày Đến Hết Hạn",
+				"STATUS": {
+					"ACTIVE": "Đang Hoạt Động",
+					"INACTIVE": "Ngừng Hoạt Động"
+				}
+			},
+			"TABLE": {
+				"NAME": "Tên Tenant",
+				"STATUS": "Trạng Thái",
+				"USERS": "Người Dùng",
+				"ORGANIZATIONS": "Tổ Chức",
+				"EXPIRES": "Ngày Hết Hạn",
+				"ACTIONS": "Thao Tác"
+			},
+			"ACTIONS": {
+				"VIEW": "Xem Chi Tiết",
+				"EDIT": "Chỉnh Sửa Tenant",
+				"DELETE": "Xóa Tenant"
+			},
+			"STATUS": {
+				"ACTIVE": "Đang Hoạt Động",
+				"INACTIVE": "Ngừng Hoạt Động",
+				"EXPIRED": "Đã Hết Hạn",
+				"EXPIRING_SOON": "Sắp Hết Hạn"
+			},
+			"NO_SEARCH_RESULTS": "Không tìm thấy tenant nào phù hợp với tìm kiếm của bạn",
+			"CREATE_FIRST_TENANT": "Tạo tenant đầu tiên để bắt đầu",
 			"EDIT_TENANT": "Chỉnh Sửa Tenant",
 			"DELETE": "Xóa Tenant",
 			"VIEW_DETAILS": "Xem Chi Tiết",

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { filter, firstValueFrom, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IOrganization, IOrganizationCreateInput, IUser } from '@gauzy/contracts';
+import { IOrganization, IOrganizationCreateInput, IUser, FeatureEnum } from '@gauzy/contracts';
 import {
 	AuthService,
 	EmployeesService,
@@ -15,10 +15,10 @@ import {
 
 @UntilDestroy()
 @Component({
-    selector: 'ga-tenant-onboarding',
-    templateUrl: './tenant-onboarding.component.html',
-    styleUrls: ['./tenant-onboarding.component.scss'],
-    standalone: false
+	selector: 'ga-tenant-onboarding',
+	templateUrl: './tenant-onboarding.component.html',
+	styleUrls: ['./tenant-onboarding.component.scss'],
+	standalone: false
 })
 export class TenantOnboardingComponent implements OnInit, OnDestroy {
 	public loading: boolean = true;
@@ -34,13 +34,16 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		private readonly _authService: AuthService,
 		private readonly _employeesService: EmployeesService,
 		private readonly _errorHandlingService: ErrorHandlingService
-	) {}
+	) { }
 
 	ngOnInit() {
 		this._activatedRoute.data
 			.pipe(
 				filter(({ user }: Data) => !!user),
-				tap(({ user }: Data) => (this._store.user = user)),
+				tap(({ user }: Data) => {
+					this._store.user = user;
+					this.user = user;
+				}),
 				tap(() => (this.loading = false)),
 				// Handle component lifecycle to avoid memory leaks
 				untilDestroyed(this)
@@ -57,9 +60,28 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		this.loading = true;
 
 		try {
-			const tenant = await this._tenantService.create({ name: organization.name });
-			this.user = await this._usersService.getMe(['tenant']);
-			this._store.user = this.user;
+			// Check if FEATURE_PLATFORM_ADMIN is enabled
+			const isPlatformAdminFeatureEnabled = this._store.hasFeatureEnabled(FeatureEnum.FEATURE_PLATFORM_ADMIN);
+
+			let tenant;
+
+			// If platform admin feature is enabled
+			if (isPlatformAdminFeatureEnabled) {
+				// User MUST have a tenant created by platform admin
+				if (!this.user?.tenantId) {
+					throw new Error('Only platform administrators can create tenants. Please contact your administrator.');
+				}
+
+				// User already has a tenant created by platform admin, use it
+				this.user = await this._usersService.getMe(['tenant']);
+				tenant = this.user.tenant;
+				this._store.user = this.user;
+			} else {
+				// Platform admin feature is disabled, allow self-service tenant creation
+				tenant = await this._tenantService.create({ name: organization.name });
+				this.user = await this._usersService.getMe(['tenant']);
+				this._store.user = this.user;
+			}
 
 			try {
 				const createdOrganization = await this._organizationsService.create({
@@ -76,7 +98,7 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 				console.error('Error while creating organization:', error);
 			}
 		} catch (error) {
-			console.error('Error while creating tenant:', error);
+			console.error('Error while onboarding user:', error);
 			// Handle and log errors using the _errorHandlingService
 			this._errorHandlingService.handleError(error);
 		} finally {
@@ -134,5 +156,5 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

@@ -4899,19 +4899,19 @@
 			"OPEN": "打开"
 		}
 	},
-    "WORKSPACE_CREATE": {
-        "ACCOUNT_CREATION": {
-            "TITLE": "创建您的账户",
-            "SUBTITLE": "完善您的资料以创建新工作区"
-        },
-        "WORKSPACE_SETUP": {
-            "TITLE": "设置您的工作区",
-            "SUBTITLE": "创建您的组织并开始使用"
-        },
-        "BUTTONS": {
-            "CONTINUE_TO_WORKSPACE_SETUP": "继续进行工作区设置"
-        }
-    },
+	"WORKSPACE_CREATE": {
+		"ACCOUNT_CREATION": {
+			"TITLE": "创建您的账户",
+			"SUBTITLE": "完善您的资料以创建新工作区"
+		},
+		"WORKSPACE_SETUP": {
+			"TITLE": "设置您的工作区",
+			"SUBTITLE": "创建您的组织并开始使用"
+		},
+		"BUTTONS": {
+			"CONTINUE_TO_WORKSPACE_SETUP": "继续进行工作区设置"
+		}
+	},
 	"NO_IMAGE": {
 		"ADD_DROP": "添加或删除图像",
 		"AVAILABLE": "图像不可用"
@@ -5176,6 +5176,189 @@
 				"INSTALL": "安装插件失败。请重试！",
 				"REVERT_INSTALLATION": "回滚安装失败！"
 			}
+		}
+	},
+	"PLATFORM_ADMIN": {
+		"TITLE": "Platform Administration",
+		"MENU": {
+			"TITLE": "Platform Dashboard",
+			"DASHBOARD": "Dashboard",
+			"TENANTS": "Tenants"
+		},
+		"DASHBOARD": {
+			"TITLE": "Platform Dashboard",
+			"WELCOME": "Welcome to Platform Admin",
+			"OVERVIEW": "Platform Overview",
+			"TOTAL_TENANTS": "Total Tenants",
+			"ACTIVE_TENANTS": "Active Tenants",
+			"EXPIRED_TENANTS": "Expired Tenants",
+			"EXPIRING_SOON": "Expiring Soon",
+			"EXPIRING_SOON_LIST": "Tenants Expiring Soon",
+			"NO_EXPIRING_TENANTS": "No tenants expiring soon",
+			"TOTAL_USERS": "Total Users",
+			"TOTAL_ORGANIZATIONS": "Total Organizations",
+			"DAYS_LEFT": "Days Left",
+			"USERS": "Users",
+			"ACTIONS": "Actions",
+			"SUBTITLE": "Manage and monitor all tenants on the platform from this centralized dashboard.",
+			"QUICK_ACTIONS": "Quick Actions",
+			"CREATE_TENANT": "Create New Tenant",
+			"VIEW_ALL_TENANTS": "View All Tenants"
+		},
+		"TENANT": {
+			"NAME": "Name",
+			"EXPIRES_AT": "Expires At",
+			"DAYS_LEFT": "Days Left",
+			"USERS": "Users",
+			"ACTIONS": "Actions"
+		},
+		"TENANTS": {
+			"TITLE": "Tenants Management",
+			"SUBTITLE": "Create, view, edit, and manage tenants on the platform.",
+			"LIST": "Tenants List",
+			"CREATE_TENANT": "Create New Tenant",
+			"REFRESH": "Refresh List",
+			"CREATE": {
+				"TITLE": "Create New Tenant",
+				"SUBTITLE": "Create a new tenant with super admin account",
+				"TENANT_INFO": "Tenant Information",
+				"TENANT_NAME": "Tenant Name",
+				"TENANT_NAME_PLACEHOLDER": "Enter tenant name",
+				"LOGO_URL": "Logo URL",
+				"LOGO_URL_PLACEHOLDER": "Enter logo URL (optional)",
+				"EXPIRES_AT": "Expiration Date",
+				"EXPIRES_AT_HINT": "Leave empty for no expiration. Format: dd/mm/yyyy, --:--",
+				"SUPER_ADMIN_INFO": "Super Admin Information",
+				"FIRST_NAME": "First Name",
+				"FIRST_NAME_PLACEHOLDER": "Enter first name (optional)",
+				"LAST_NAME": "Last Name",
+				"LAST_NAME_PLACEHOLDER": "Enter last name (optional)",
+				"EMAIL": "Email",
+				"EMAIL_PLACEHOLDER": "Enter super admin email",
+				"PASSWORD": "Password",
+				"PASSWORD_PLACEHOLDER": "Enter password",
+				"CANCEL": "Cancel",
+				"CREATE_TENANT": "Create Tenant",
+				"ERRORS": {
+					"NAME_REQUIRED": "Tenant name is required",
+					"EMAIL_INVALID": "Please enter a valid email address",
+					"PASSWORD_MIN_LENGTH": "Password must be at least 8 characters"
+				}
+			},
+			"EDIT": {
+				"TITLE": "Edit Tenant",
+				"SUBTITLE": "Update tenant details and super admin information.",
+				"TENANT_INFO": "Tenant Information",
+				"TENANT_NAME": "Tenant Name",
+				"ERRORS": {
+					"NAME_REQUIRED": "Tenant name is required"
+				},
+				"LOGO_URL": "Logo URL",
+				"EXPIRES_AT": "Expiration Date",
+				"IS_ACTIVE": "Active Status",
+				"CANCEL": "Cancel",
+				"UPDATE": "Update Tenant",
+				"UPDATE_TENANT": "Update Tenant"
+			},
+			"DETAILS": {
+				"TITLE": "Tenant Details",
+				"EDIT": "Edit Tenant",
+				"BASIC_INFO": "Basic Information",
+				"ID": "Tenant ID",
+				"CREATED_AT": "Created At",
+				"UPDATED_AT": "Updated At",
+				"EXPIRES_AT": "Expires At",
+				"STATISTICS": "Statistics",
+				"TOTAL_USERS": "Total Users",
+				"TOTAL_ORGANIZATIONS": "Total Organizations",
+				"DAYS_UNTIL_EXPIRATION": "Days Until Expiration",
+				"STATUS": {
+					"ACTIVE": "Active",
+					"INACTIVE": "Inactive"
+				}
+			},
+			"TABLE": {
+				"NAME": "Tenant Name",
+				"STATUS": "Status",
+				"USERS": "Users",
+				"ORGANIZATIONS": "Organizations",
+				"EXPIRES": "Expires At",
+				"ACTIONS": "Actions"
+			},
+			"ACTIONS": {
+				"VIEW": "View Details",
+				"EDIT": "Edit Tenant",
+				"DELETE": "Delete Tenant"
+			},
+			"STATUS": {
+				"ACTIVE": "Active",
+				"INACTIVE": "Inactive",
+				"EXPIRED": "Expired",
+				"EXPIRING_SOON": "Expiring Soon"
+			},
+			"NO_SEARCH_RESULTS": "No tenants found matching your search",
+			"CREATE_FIRST_TENANT": "Create your first tenant to get started",
+			"EDIT_TENANT": "Edit Tenant",
+			"DELETE": "Delete Tenant",
+			"VIEW_DETAILS": "View Details",
+			"TENANT_INFO": "Tenant Information",
+			"SUPER_ADMIN_INFO": "Super Admin Information",
+			"NAME": "Tenant Name",
+			"NAME_PLACEHOLDER": "Enter tenant name",
+			"NAME_REQUIRED": "Tenant name is required",
+			"LOGO_URL": "Logo URL",
+			"LOGO_PLACEHOLDER": "Enter logo URL (optional)",
+			"EXPIRATION_DATE": "Expiration Date",
+			"EMAIL": "Email",
+			"EMAIL_PLACEHOLDER": "Enter super admin email",
+			"EMAIL_REQUIRED": "Email is required",
+			"PASSWORD": "Password",
+			"PASSWORD_PLACEHOLDER": "Enter password",
+			"PASSWORD_REQUIRED": "Password is required",
+			"CONFIRM_PASSWORD": "Confirm Password",
+			"CONFIRM_PASSWORD_PLACEHOLDER": "Re-enter password",
+			"PASSWORD_MISMATCH": "Passwords do not match",
+			"FIRST_NAME": "First Name",
+			"FIRST_NAME_PLACEHOLDER": "Enter first name (optional)",
+			"LAST_NAME": "Last Name",
+			"LAST_NAME_PLACEHOLDER": "Enter last name (optional)",
+			"IS_ACTIVE": "Active Status",
+			"ACTIVE": "Active",
+			"INACTIVE": "Inactive",
+			"EXPIRED": "Expired",
+			"EXPIRING_SOON": "Expiring Soon",
+			"TENANT_ID": "Tenant ID",
+			"CREATED_AT": "Created At",
+			"UPDATED_AT": "Updated At",
+			"EXPIRES_AT": "Expires At",
+			"DAYS_REMAINING": "days remaining",
+			"STATISTICS": "Statistics",
+			"TOTAL_USERS": "Total Users",
+			"TOTAL_ORGANIZATIONS": "Total Organizations",
+			"SUBSCRIPTION_PLAN": "Subscription Plan",
+			"ACTIVATE": "Activate Tenant",
+			"DEACTIVATE": "Deactivate Tenant",
+			"STATUS_UPDATED": "Tenant status updated successfully",
+			"STATUS_UPDATE_ERROR": "Failed to update tenant status",
+			"CREATED_SUCCESS": "Tenant created successfully",
+			"CREATE_ERROR": "Failed to create tenant",
+			"UPDATED_SUCCESS": "Tenant updated successfully",
+			"UPDATE_ERROR": "Failed to update tenant",
+			"DELETED_SUCCESS": "Tenant deleted successfully",
+			"DELETE_ERROR": "Failed to delete tenant",
+			"LOAD_ERROR": "Failed to load tenant",
+			"DELETE_CONFIRM_TITLE": "Delete Tenant",
+			"DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete tenant '{{ name }}'? This action cannot be undone.",
+			"SEARCH_PLACEHOLDER": "Search tenants...",
+			"FILTER_BY_STATUS": "Filter by Status",
+			"ALL": "All",
+			"SORT_BY": "Sort By",
+			"SORT_NAME_ASC": "Name (A-Z)",
+			"SORT_NAME_DESC": "Name (Z-A)",
+			"SORT_CREATED_ASC": "Oldest First",
+			"SORT_CREATED_DESC": "Newest First",
+			"NO_TENANTS": "No tenants found",
+			"NO_TENANTS_MESSAGE": "There are no tenants matching your criteria."
 		}
 	},
 	"SERVER_DOWN": {

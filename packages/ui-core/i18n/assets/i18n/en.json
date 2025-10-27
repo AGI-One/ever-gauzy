@@ -5371,15 +5371,37 @@
 			"TITLE": "Tenants Management",
 			"SUBTITLE": "Create, view, edit, and manage tenants on the platform.",
 			"LIST": "Tenants List",
-			"CREATE": "Create Tenant",
 			"CREATE_TENANT": "Create New Tenant",
 			"REFRESH": "Refresh List",
-			"DETAILS": {
-				"TITLE": "Tenant Details - '{{ name }}'",
-				"EDIT": " Edit Tenant '{{ name }}' Details"
+			"CREATE": {
+				"TITLE": "Create New Tenant",
+				"SUBTITLE": "Create a new tenant with super admin account",
+				"TENANT_INFO": "Tenant Information",
+				"TENANT_NAME": "Tenant Name",
+				"TENANT_NAME_PLACEHOLDER": "Enter tenant name",
+				"LOGO_URL": "Logo URL",
+				"LOGO_URL_PLACEHOLDER": "Enter logo URL (optional)",
+				"EXPIRES_AT": "Expiration Date",
+				"EXPIRES_AT_HINT": "Leave empty for no expiration. Format: dd/mm/yyyy, --:--",
+				"SUPER_ADMIN_INFO": "Super Admin Information",
+				"FIRST_NAME": "First Name",
+				"FIRST_NAME_PLACEHOLDER": "Enter first name (optional)",
+				"LAST_NAME": "Last Name",
+				"LAST_NAME_PLACEHOLDER": "Enter last name (optional)",
+				"EMAIL": "Email",
+				"EMAIL_PLACEHOLDER": "Enter super admin email",
+				"PASSWORD": "Password",
+				"PASSWORD_PLACEHOLDER": "Enter password",
+				"CANCEL": "Cancel",
+				"CREATE_TENANT": "Create Tenant",
+				"ERRORS": {
+					"NAME_REQUIRED": "Tenant name is required",
+					"EMAIL_INVALID": "Please enter a valid email address",
+					"PASSWORD_MIN_LENGTH": "Password must be at least 8 characters"
+				}
 			},
 			"EDIT": {
-				"TITLE": "Edit Tenant '{{ name }}'",
+				"TITLE": "Edit Tenant",
 				"SUBTITLE": "Update tenant details and super admin information.",
 				"TENANT_INFO": "Tenant Information",
 				"TENANT_NAME": "Tenant Name",
@@ -5390,8 +5412,47 @@
 				"EXPIRES_AT": "Expiration Date",
 				"IS_ACTIVE": "Active Status",
 				"CANCEL": "Cancel",
-				"UPDATE": "Update Tenant"
+				"UPDATE": "Update Tenant",
+				"UPDATE_TENANT": "Update Tenant"
 			},
+			"DETAILS": {
+				"TITLE": "Tenant Details",
+				"EDIT": "Edit Tenant",
+				"BASIC_INFO": "Basic Information",
+				"ID": "Tenant ID",
+				"CREATED_AT": "Created At",
+				"UPDATED_AT": "Updated At",
+				"EXPIRES_AT": "Expires At",
+				"STATISTICS": "Statistics",
+				"TOTAL_USERS": "Total Users",
+				"TOTAL_ORGANIZATIONS": "Total Organizations",
+				"DAYS_UNTIL_EXPIRATION": "Days Until Expiration",
+				"STATUS": {
+					"ACTIVE": "Active",
+					"INACTIVE": "Inactive"
+				}
+			},
+			"TABLE": {
+				"NAME": "Tenant Name",
+				"STATUS": "Status",
+				"USERS": "Users",
+				"ORGANIZATIONS": "Organizations",
+				"EXPIRES": "Expires At",
+				"ACTIONS": "Actions"
+			},
+			"ACTIONS": {
+				"VIEW": "View Details",
+				"EDIT": "Edit Tenant",
+				"DELETE": "Delete Tenant"
+			},
+			"STATUS": {
+				"ACTIVE": "Active",
+				"INACTIVE": "Inactive",
+				"EXPIRED": "Expired",
+				"EXPIRING_SOON": "Expiring Soon"
+			},
+			"NO_SEARCH_RESULTS": "No tenants found matching your search",
+			"CREATE_FIRST_TENANT": "Create your first tenant to get started",
 			"EDIT_TENANT": "Edit Tenant",
 			"DELETE": "Delete Tenant",
 			"VIEW_DETAILS": "View Details",
