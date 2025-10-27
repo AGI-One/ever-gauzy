@@ -21,6 +21,16 @@ export class TenantService {
 	}
 
 	/**
+	 * Updates the current user's tenant.
+	 *
+	 * @param {Partial<ITenant>} input - The partial tenant data to update.
+	 * @returns {Promise<ITenant>} - A promise that resolves to the updated tenant.
+	 */
+	update(input: Partial<ITenant>): Promise<ITenant> {
+		return firstValueFrom(this.http.put<ITenant>(`${this.API_URL}`, input));
+	}
+
+	/**
 	 * Retrieves the settings for the tenant.
 	 *
 	 * @returns {Promise<ITenantSetting>} - A promise that resolves to the tenant settings.

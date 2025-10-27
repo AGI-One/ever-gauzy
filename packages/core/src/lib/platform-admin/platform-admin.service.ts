@@ -22,6 +22,9 @@ export class PlatformAdminService {
         @InjectRepository(Organization)
         private readonly organizationRepository: Repository<Organization>,
 
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>,
+
         private readonly userService: UserService,
         private readonly roleService: RoleService,
         private readonly commandBus: CommandBus
@@ -233,14 +236,26 @@ export class PlatformAdminService {
         // Create Role/Permissions for the newly created tenant
         await this.commandBus.execute(new TenantRoleBulkCreateCommand([savedTenant]));
 
-        // Get SUPER_ADMIN role for this tenant (now it should exist)
-        const superAdminRole = await this.roleService.findOneByWhereOptions({
-            name: RolesEnum.SUPER_ADMIN,
-            tenantId: savedTenant.id
+        // Find SUPER_ADMIN role for this specific tenant using direct repository query
+        // to avoid TenantAwareCrudService auto-filtering by RequestContext
+        const superAdminRole = await this.roleRepository.findOne({
+            where: {
+                name: RolesEnum.SUPER_ADMIN,
+                tenantId: savedTenant.id
+            }
         });
 
         if (!superAdminRole) {
             throw new BadRequestException('Failed to create SUPER_ADMIN role for tenant');
+        }
+
+        // Log for debugging - verify we got the correct role for the new tenant
+        console.log(`[PlatformAdmin] Creating user for tenant: ${savedTenant.id} (${savedTenant.name})`);
+        console.log(`[PlatformAdmin] Found SUPER_ADMIN role: ${superAdminRole.id} for tenant: ${superAdminRole.tenantId}`);
+        
+        if (superAdminRole.tenantId !== savedTenant.id) {
+            console.error(`[PlatformAdmin] ERROR: Role tenant mismatch! Role belongs to ${superAdminRole.tenantId}, but expected ${savedTenant.id}`);
+            throw new BadRequestException('Role tenant mismatch - found role from wrong tenant');
         }
 
         // Create super admin user directly using repository to avoid TenantAwareCrudService
@@ -258,7 +273,11 @@ export class PlatformAdminService {
             role: superAdminRole
         });
 
-        await this.userRepository.save(superAdminUser);
+        const savedUser = await this.userRepository.save(superAdminUser);
+        
+        // Verify user was created correctly
+        console.log(`[PlatformAdmin] Created user: ${savedUser.id} (${savedUser.email})`);
+        console.log(`[PlatformAdmin] User tenantId: ${savedUser.tenantId}, roleId: ${savedUser.roleId}`);
 
         return this.getTenantById(savedTenant.id);
     }

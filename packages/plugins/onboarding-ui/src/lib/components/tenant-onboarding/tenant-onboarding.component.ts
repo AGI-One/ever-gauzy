@@ -64,18 +64,18 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 			const isPlatformAdminFeatureEnabled = this._store.hasFeatureEnabled(FeatureEnum.FEATURE_PLATFORM_ADMIN);
 
 			let tenant;
+			let shouldUpdateTenant = false;
 
-			// If platform admin feature is enabled
-			if (isPlatformAdminFeatureEnabled) {
-				// User MUST have a tenant created by platform admin
-				if (!this.user?.tenantId) {
-					throw new Error('Only platform administrators can create tenants. Please contact your administrator.');
-				}
-
+			// If platform admin feature is enabled AND user already has a tenant
+			if (isPlatformAdminFeatureEnabled && this.user?.tenantId) {
 				// User already has a tenant created by platform admin, use it
 				this.user = await this._usersService.getMe(['tenant']);
 				tenant = this.user.tenant;
 				this._store.user = this.user;
+				shouldUpdateTenant = true; // Flag to update tenant info later
+			} else if (isPlatformAdminFeatureEnabled && !this.user?.tenantId) {
+				// Platform admin feature is enabled but user has no tenant - not allowed
+				throw new Error('Only platform administrators can create tenants. Please contact your administrator.');
 			} else {
 				// Platform admin feature is disabled, allow self-service tenant creation
 				tenant = await this._tenantService.create({ name: organization.name });
@@ -84,11 +84,21 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 			}
 
 			try {
+				// Create organization
 				const createdOrganization = await this._organizationsService.create({
 					...organization,
 					tenant,
 					isDefault: true
 				});
+
+				// Update tenant info if needed (when user already had a tenant from platform admin)
+				if (shouldUpdateTenant && organization.name) {
+					// Update tenant with organization name or other details
+					await this._tenantService.update({
+						name: organization.name
+						// Add other fields from organization if needed
+					});
+				}
 
 				await this.getAccessTokenFromRefreshToken();
 				this.registerEmployeeFeature(organization, createdOrganization); // Process in the background
