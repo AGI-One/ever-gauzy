@@ -1,12 +1,14 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThan, MoreThan, IsNull } from 'typeorm';
+import { CommandBus } from '@nestjs/cqrs';
 import { RolesEnum, IPlatformAdminDashboardStats, ITenantWithStats, IPlatformTenantQuery } from '@gauzy/contracts';
 import { Tenant, User, Organization, Role } from '../core/entities/internal';
 import { RequestContext } from '../core/context';
 import { CreateTenantDTO, UpdateTenantDTO } from './dto';
 import { UserService } from '../user/user.service';
 import { RoleService } from '../role/role.service';
+import { TenantRoleBulkCreateCommand } from '../role/commands';
 
 @Injectable()
 export class PlatformAdminService {
@@ -21,7 +23,8 @@ export class PlatformAdminService {
         private readonly organizationRepository: Repository<Organization>,
 
         private readonly userService: UserService,
-        private readonly roleService: RoleService
+        private readonly roleService: RoleService,
+        private readonly commandBus: CommandBus
     ) { }
 
     /**
@@ -227,21 +230,35 @@ export class PlatformAdminService {
 
         const savedTenant = await this.tenantRepository.save(tenant);
 
-        // Get or create SUPER_ADMIN role for this tenant
+        // Create Role/Permissions for the newly created tenant
+        await this.commandBus.execute(new TenantRoleBulkCreateCommand([savedTenant]));
+
+        // Get SUPER_ADMIN role for this tenant (now it should exist)
         const superAdminRole = await this.roleService.findOneByWhereOptions({
             name: RolesEnum.SUPER_ADMIN,
             tenantId: savedTenant.id
         });
 
-        // Create super admin user
-        const superAdmin = await this.userService.create({
+        if (!superAdminRole) {
+            throw new BadRequestException('Failed to create SUPER_ADMIN role for tenant');
+        }
+
+        // Create super admin user directly using repository to avoid TenantAwareCrudService
+        // auto-assigning currentTenant from RequestContext
+        const hashedPassword = await this.userService.getPasswordHash(input.superAdmin.password);
+
+        const superAdminUser = this.userRepository.create({
             email: input.superAdmin.email,
             firstName: input.superAdmin.firstName,
             lastName: input.superAdmin.lastName,
-            hash: input.superAdmin.password, // Will be hashed by UserService
+            hash: hashedPassword,
             tenantId: savedTenant.id,
-            roleId: superAdminRole.id
+            roleId: superAdminRole.id,
+            tenant: savedTenant,
+            role: superAdminRole
         });
+
+        await this.userRepository.save(superAdminUser);
 
         return this.getTenantById(savedTenant.id);
     }

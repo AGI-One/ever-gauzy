@@ -9,7 +9,8 @@ import {
 	SetupComponent,
 	SplashScreenComponent,
 	TimeTrackerComponent,
-	UpdaterComponent
+	UpdaterComponent,
+	AuthGuard
 } from '@gauzy/desktop-ui-lib';
 
 const routes: Routes = [
@@ -54,6 +55,11 @@ const routes: Routes = [
 	{
 		path: 'always-on',
 		component: AlwaysOnComponent
+	},
+	{
+		path: 'platform-admin',
+		loadChildren: () => import('./platform-admin/platform-admin.module').then((m) => m.PlatformAdminModule),
+		canActivate: [AuthGuard]
 	}
 ];
 
@@ -68,4 +74,4 @@ const config: ExtraOptions = {
 	imports: [RouterModule.forRoot(routes, config)],
 	exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
