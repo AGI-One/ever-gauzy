@@ -249,12 +249,7 @@ export class PlatformAdminService {
             throw new BadRequestException('Failed to create SUPER_ADMIN role for tenant');
         }
 
-        // Log for debugging - verify we got the correct role for the new tenant
-        console.log(`[PlatformAdmin] Creating user for tenant: ${savedTenant.id} (${savedTenant.name})`);
-        console.log(`[PlatformAdmin] Found SUPER_ADMIN role: ${superAdminRole.id} for tenant: ${superAdminRole.tenantId}`);
-
         if (superAdminRole.tenantId !== savedTenant.id) {
-            console.error(`[PlatformAdmin] ERROR: Role tenant mismatch! Role belongs to ${superAdminRole.tenantId}, but expected ${savedTenant.id}`);
             throw new BadRequestException('Role tenant mismatch - found role from wrong tenant');
         }
 
@@ -274,10 +269,6 @@ export class PlatformAdminService {
         });
 
         const savedUser = await this.userRepository.save(superAdminUser);
-
-        // Verify user was created correctly
-        console.log(`[PlatformAdmin] Created user: ${savedUser.id} (${savedUser.email})`);
-        console.log(`[PlatformAdmin] User tenantId: ${savedUser.tenantId}, roleId: ${savedUser.roleId}`);
 
         return this.getTenantById(savedTenant.id);
     }

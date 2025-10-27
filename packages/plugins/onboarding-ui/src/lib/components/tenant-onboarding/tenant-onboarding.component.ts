@@ -66,14 +66,14 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 			let tenant;
 			let shouldUpdateTenant = false;
 
-			// If platform admin feature is enabled AND user already has a tenant
-			if (isPlatformAdminFeatureEnabled && this.user?.tenantId) {
-				// User already has a tenant created by platform admin, use it
-				this.user = await this._usersService.getMe(['tenant']);
+			// If user already has a tenant (created by platform admin or already exists)
+			if (this.user?.tenantId) {
+				// User already has a tenant, use it instead of creating a new one
+				this.user = await this._usersService.getMe(['tenant', 'organizations']);
 				tenant = this.user.tenant;
 				this._store.user = this.user;
 				shouldUpdateTenant = true; // Flag to update tenant info later
-			} else if (isPlatformAdminFeatureEnabled && !this.user?.tenantId) {
+			} else if (isPlatformAdminFeatureEnabled) {
 				// Platform admin feature is enabled but user has no tenant - not allowed
 				throw new Error('Only platform administrators can create tenants. Please contact your administrator.');
 			} else {
@@ -92,16 +92,32 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 				});
 
 				// Update tenant info if needed (when user already had a tenant from platform admin)
-				if (shouldUpdateTenant && organization.name) {
-					// Update tenant with organization name or other details
-					await this._tenantService.update({
-						name: organization.name
-						// Add other fields from organization if needed
-					});
+				if (shouldUpdateTenant) {
+					// Update tenant with organization information
+					const tenantUpdateData: any = {};
+
+					// Update name if provided
+					if (organization.name) {
+						tenantUpdateData.name = organization.name;
+					}
+
+					// Update logo if provided (can be from imageUrl or imageId)
+					if (organization.imageUrl) {
+						tenantUpdateData.logo = organization.imageUrl;
+					}
+
+					if (organization.imageId) {
+						tenantUpdateData.imageId = organization.imageId;
+					}
+
+					// Only update if there's data to update
+					if (Object.keys(tenantUpdateData).length > 0) {
+						await this._tenantService.update(tenantUpdateData);
+					}
 				}
 
 				await this.getAccessTokenFromRefreshToken();
-				this.registerEmployeeFeature(organization, createdOrganization); // Process in the background
+				await this.registerEmployeeFeature(organization, createdOrganization);
 
 				this._router.navigate(['/onboarding/complete']);
 			} catch (error) {

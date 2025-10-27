@@ -15,18 +15,20 @@ export const OnboardingResolver: ResolveFn<Observable<IUser | null>> = (): Obser
 	const _usersService = inject(UsersService);
 	const _errorHandlingService = inject(ErrorHandlingService);
 
-	// Fetch the user data
-	const user$ = _usersService.getMe();
+	// Fetch the user data with organizations to check if onboarding is complete
+	const user$ = _usersService.getMe(['organizations', 'organizations.organization']);
 
 	// Fetch the user data from the service
 	return from(user$).pipe(
 		// Map the user object to the user data
 		map((user: IUser) => {
-			if (user.tenantId) {
+			// Only redirect to complete if user has BOTH tenant and at least one organization
+			// Users with only tenant (no org) should stay on onboarding to create their organization
+			if (user.tenantId && user.organizations && user.organizations.length > 0) {
 				_router.navigate(['/onboarding/complete']);
-				return user; // User has a tenantId
+				return user; // User has completed onboarding
 			}
-			return user; // Return the user object if no tenantId
+			return user; // Return the user object if onboarding is not complete
 		}),
 		// Handle any errors
 		catchError((error) => {

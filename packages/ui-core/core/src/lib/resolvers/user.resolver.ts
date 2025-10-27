@@ -14,17 +14,17 @@ export const UserResolver: ResolveFn<Observable<IUser | null>> = (): Observable<
 	const _usersService = inject(UsersService);
 	const _errorHandlingService = inject(ErrorHandlingService);
 
-	// Fetch user data with role and employee relations
-	const user$ = from(_usersService.getMe(['role', 'employee', 'employee.organization']));
+	// Fetch user data with role and organizations relations
+	const user$ = from(_usersService.getMe(['role', 'organizations', 'organizations.organization']));
 
 	// Fetch user data from the service
 	return user$.pipe(
 		// Debounce the request to avoid excessive API calls
 		debounceTime(100),
-		// Check if the user has a tenant ID or organization ID
+		// Check if the user has a tenant ID and at least one organization
 		tap((user: IUser) => {
-			// Redirect to onboarding if user doesn't have tenant OR organization
-			if (!user.tenantId || !user.employee?.organizationId) {
+			// Redirect to onboarding if user doesn't have tenant OR doesn't have any organization
+			if (!user.tenantId || !user.organizations || user.organizations.length === 0) {
 				_router.navigate(['/onboarding/tenant']);
 				return;
 			}

@@ -40,6 +40,22 @@ export class RoleService extends TenantAwareCrudService<Role> {
 		return await this.typeOrmRepository.save(roles);
 	}
 
+	/**
+	 * Find roles by tenant ID without TenantAwareCrudService filtering.
+	 * This is used when Platform Admin creates a new tenant - we need to find roles
+	 * for the newly created tenant, not the current user's tenant.
+	 *
+	 * @param tenantId - The tenant ID to find roles for
+	 * @returns A promise that resolves to an array of roles
+	 */
+	async findRolesByTenantId(tenantId: string): Promise<IRole[]> {
+		return await this.typeOrmRepository.find({
+			where: {
+				tenantId
+			}
+		});
+	}
+
 	async migrateRoles(): Promise<IRoleMigrateInput[]> {
 		const roles: IRole[] = await this.typeOrmRepository.find({
 			where: {
