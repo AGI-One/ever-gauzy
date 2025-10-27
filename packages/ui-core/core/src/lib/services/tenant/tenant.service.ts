@@ -6,7 +6,7 @@ import { API_PREFIX } from '@gauzy/ui-core/common';
 
 @Injectable()
 export class TenantService {
-	constructor(private readonly http: HttpClient) {}
+	constructor(private readonly http: HttpClient) { }
 
 	API_URL = `${API_PREFIX}/tenant`;
 
