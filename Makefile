@@ -1,4 +1,8 @@
-.PHONY: up release terminal format install tidy run build dbup dbdown rsdb dev test migrate prisma-generate prisma-migrate gen-type dbup dbdown rsdb
+.PHONY: up release terminal format install tidy run build dbup dbdown rsdb dev test migrate prisma-generate prisma-migrate gen-type win-up win-release win-terminal win-format win-install win-tidy win-run win-build win-dbup win-dbdown win-rsdb win-dev win-prod
+
+# ============================================================================
+# LINUX/MACOS COMMANDS
+# ============================================================================
 
 up:
 ifeq ($(MODE),prod)
@@ -53,4 +57,89 @@ dbup:
 	cd . && env -i PATH="$$PATH" HOME="$$HOME" docker compose -f ./docker-compose.infra.yml up -d && cd ..
 
 rsdb:
-	make dbdown && sudo rm -rf ./mssql && sudo rm -rf ./redis && sudo rm -rf ./azurite && make dbup
+	@echo "⚠️  Resetting databases (deleting all data)..."
+	make dbdown
+	@echo "🗑️  Removing Docker volumes..."
+	docker volume rm -f ever-gauzy_postgres_data 2>/dev/null || true
+	docker volume rm -f ever-gauzy_redis_data 2>/dev/null || true
+	docker volume rm -f ever-gauzy_minio_data 2>/dev/null || true
+	docker volume rm -f ever-gauzy_cube_data 2>/dev/null || true
+	docker volume rm -f ever-gauzy_jitsu_workspace 2>/dev/null || true
+	docker volume rm -f ever-gauzy_opensearch-data 2>/dev/null || true
+	@echo "🗑️  Cleaning up local data directories..."
+	sudo rm -rf ./.deploy/redis/data 2>/dev/null || true
+	sudo rm -rf ./.deploy/redis/jitsu_users_recognition/data 2>/dev/null || true
+	sudo rm -rf ./.deploy/jitsu/configurator/data/logs 2>/dev/null || true
+	sudo rm -rf ./.deploy/jitsu/server/data/logs 2>/dev/null || true
+	@echo "✅ Database volumes and data cleared."
+	make dbup
+	@echo "✅ Databases reset and restarted!"
+
+# ============================================================================
+# WINDOWS COMMANDS
+# ============================================================================
+
+win-up:
+ifeq ($(MODE),prod)
+	@bin\up.bat prod
+else ifeq ($(MODE),dev-build)
+	@bin\up.bat localbuild
+else
+	@bin\up.bat local
+endif
+
+win-release:
+	@bin\release.bat
+
+win-terminal:
+	@echo 🚀 Connecting to application container...
+	@powershell -Command "$$container = (docker ps -q -f name=gauzy-app | Select-Object -First 1); if ($$container) { docker exec -it $$container sh } else { Write-Host '❌ Application container not found! Please run make win-up first.' }"
+
+win-format:
+	@echo 🚀 Formatting TypeScript code...
+	@yarn format
+	@echo ✅ TypeScript code formatting completed!
+
+win-install:
+	@yarn install
+
+win-tidy: win-install
+	@yarn audit
+
+win-run:
+	@yarn start:dev
+
+win-rsdb:
+	@echo ⚠️  Resetting databases (deleting all data) - Windows...
+	@$(MAKE) win-dbdown
+	@echo 🗑️  Removing Docker volumes...
+	@powershell -Command "docker volume rm -f ever-gauzy_postgres_data 2>$$null"
+	@powershell -Command "docker volume rm -f ever-gauzy_redis_data 2>$$null"
+	@powershell -Command "docker volume rm -f ever-gauzy_minio_data 2>$$null"
+	@powershell -Command "docker volume rm -f ever-gauzy_cube_data 2>$$null"
+	@powershell -Command "docker volume rm -f ever-gauzy_jitsu_workspace 2>$$null"
+	@powershell -Command "docker volume rm -f ever-gauzy_opensearch-data 2>$$null"
+	@echo 🗑️  Cleaning up local data directories...
+	@powershell -Command "if (Test-Path '.\.deploy\redis\data') { Remove-Item -Path '.\.deploy\redis\data' -Recurse -Force -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\redis\jitsu_users_recognition\data') { Remove-Item -Path '.\.deploy\redis\jitsu_users_recognition\data' -Recurse -Force -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\jitsu\configurator\data\logs') { Remove-Item -Path '.\.deploy\jitsu\configurator\data\logs' -Recurse -Force -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\jitsu\server\data\logs') { Remove-Item -Path '.\.deploy\jitsu\server\data\logs' -Recurse -Force -ErrorAction SilentlyContinue }"
+	@echo ✅ Database volumes and data cleared.
+	@$(MAKE) win-dbup
+	@echo ✅ Databases reset and restarted!
+
+win-dbdown:
+	@powershell -Command "Set-Location .; docker compose -f .\docker-compose.infra.yml down; Set-Location .."
+
+win-dbup:
+	@powershell -Command "Set-Location .; docker compose -f .\docker-compose.infra.yml up -d; Set-Location .."
+
+win-build:
+	@if not exist dist mkdir dist
+	@yarn build
+
+win-dev:
+	@yarn start:dev
+
+win-prod:
+	@yarn start
