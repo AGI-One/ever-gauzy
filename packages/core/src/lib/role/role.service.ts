@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { DeleteResult, In, Not } from 'typeorm';
+import { DeleteResult, In, Not, UpdateResult } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { IRole, ITenant, RolesEnum, IRoleMigrateInput, IImportRecord, SYSTEM_DEFAULT_ROLES } from '@gauzy/contracts';
 import { TenantAwareCrudService } from './../core/crud';
+import { IUpdateCriteria } from './../core/crud/icrud.service';
 import { Role } from './role.entity';
 import { RequestContext } from './../core/context';
 import { ImportRecordUpdateOrCreateCommand } from './../export-import/import-record';
@@ -17,6 +19,41 @@ export class RoleService extends TenantAwareCrudService<Role> {
 		private readonly _commandBus: CommandBus
 	) {
 		super(typeOrmRoleRepository, mikroOrmRoleRepository);
+	}
+
+	/**
+	 * Normalize role name: uppercase and replace spaces with underscores
+	 * @param name - Role name to normalize
+	 * @returns Normalized role name
+	 */
+	private normalizeRoleName(name: string): string {
+		if (!name || typeof name !== 'string') {
+			return name;
+		}
+		return name.trim().toUpperCase().replace(/\s+/g, '_');
+	}
+
+	/**
+	 * Override create to normalize role name
+	 */
+	async create(entity: Partial<Role>): Promise<IRole> {
+		if (entity.name) {
+			entity.name = this.normalizeRoleName(entity.name);
+		}
+		return await super.create(entity);
+	}
+
+	/**
+	 * Override update to normalize role name
+	 */
+	async update(
+		id: IUpdateCriteria<Role>,
+		partialEntity: QueryDeepPartialEntity<Role>
+	): Promise<UpdateResult | Role> {
+		if (partialEntity.name) {
+			partialEntity.name = this.normalizeRoleName(partialEntity.name as string);
+		}
+		return await super.update(id as string, partialEntity);
 	}
 
 	/**
