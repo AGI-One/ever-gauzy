@@ -13,12 +13,7 @@ export const appRoutes: Routes = [
 	},
 	{
 		path: 'sign-in',
-		children: [
-			{
-				path: 'success',
-				loadChildren: () => import('@gauzy/ui-auth').then((m) => m.SignInSuccessModule)
-			}
-		]
+		loadChildren: () => import('@gauzy/ui-auth').then((m) => m.SignInSuccessModule)
 	},
 	{
 		path: 'onboarding',
