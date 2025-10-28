@@ -20,6 +20,38 @@ export class RoleService extends TenantAwareCrudService<Role> {
 	}
 
 	/**
+	 * Normalize role name: uppercase and replace spaces with underscores
+	 * @param name - Role name to normalize
+	 * @returns Normalized role name
+	 */
+	private normalizeRoleName(name: string): string {
+		if (!name || typeof name !== 'string') {
+			return name;
+		}
+		return name.trim().toUpperCase().replace(/\s+/g, '_');
+	}
+
+	/**
+	 * Override create to normalize role name
+	 */
+	async create(entity: Partial<Role>): Promise<IRole> {
+		if (entity.name) {
+			entity.name = this.normalizeRoleName(entity.name);
+		}
+		return await super.create(entity);
+	}
+
+	/**
+	 * Override update to normalize role name
+	 */
+	async update(id: string | number | Partial<Role>, entity: Partial<Role>): Promise<IRole> {
+		if (entity.name) {
+			entity.name = this.normalizeRoleName(entity.name);
+		}
+		return await super.update(id, entity);
+	}
+
+	/**
 	 * Creates multiple roles for each tenant and saves them.
 	 * @param tenants - An array of tenants for which roles will be created.
 	 * @returns A promise that resolves to an array of created roles.
