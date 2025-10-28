@@ -7,7 +7,7 @@ import { NbDialogService } from '@nebular/theme';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'underscore';
 import { environment } from '@gauzy/ui-config';
-import { IFeature, IFeatureOrganization, IFeatureToggle, IOrganization, IUser } from '@gauzy/contracts';
+import { FeatureEnum, IFeature, IFeatureOrganization, IFeatureToggle, IOrganization, IUser, RolesEnum } from '@gauzy/contracts';
 import { TranslationBaseComponent } from '@gauzy/ui-core/i18n';
 import { Store } from '@gauzy/ui-core/core';
 import { FeatureStoreService } from '@gauzy/ui-core/core';
@@ -15,10 +15,10 @@ import { CountdownConfirmationComponent } from '../user/forms';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'ga-feature-toggle',
-    templateUrl: './feature-toggle.component.html',
-    styleUrls: ['./feature-toggle.component.scss'],
-    standalone: false
+	selector: 'ga-feature-toggle',
+	templateUrl: './feature-toggle.component.html',
+	styleUrls: ['./feature-toggle.component.scss'],
+	standalone: false
 })
 export class FeatureToggleComponent extends TranslationBaseComponent implements OnInit, OnChanges {
 	@Input() organization: IOrganization;
@@ -93,7 +93,7 @@ export class FeatureToggleComponent extends TranslationBaseComponent implements 
 			.subscribe();
 	}
 
-	ngOnChanges(change: SimpleChanges): void {}
+	ngOnChanges(change: SimpleChanges): void { }
 
 	getFeatures() {
 		this._featureStoreService.loadFeatures(['children']).pipe(untilDestroyed(this)).subscribe();
@@ -109,8 +109,8 @@ export class FeatureToggleComponent extends TranslationBaseComponent implements 
 				tenantId,
 				...(this.organization && this.isOrganization
 					? {
-							organizationId: this.organization.id
-					  }
+						organizationId: this.organization.id
+					}
 					: {})
 			})
 			.pipe(untilDestroyed(this))
@@ -187,5 +187,18 @@ export class FeatureToggleComponent extends TranslationBaseComponent implements 
 
 	getTranslationFormat(text: string) {
 		return text.replace(/ /g, '_').replace(/,|&/g, '').replace(/__/g, '_').toUpperCase();
+	}
+
+	/**
+	 * Check if user can toggle a specific feature
+	 * Only PLATFORM_ADMIN can toggle FEATURE_PLATFORM_ADMIN
+	 */
+	canToggleFeature(feature: IFeature): boolean {
+		// If this is FEATURE_PLATFORM_ADMIN, only platform admin can toggle it
+		if (feature.code === FeatureEnum.FEATURE_PLATFORM_ADMIN) {
+			return this.user?.role?.name === RolesEnum.PLATFORM_ADMIN;
+		}
+		// All other features can be toggled by users with appropriate permissions
+		return true;
 	}
 }

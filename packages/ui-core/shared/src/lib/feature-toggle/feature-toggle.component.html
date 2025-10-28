@@ -49,6 +49,7 @@
 										<nb-toggle
 											[checked]="enabledFeature(row)"
 											(checkedChange)="featureChanged($event, row)"
+											[disabled]="!canToggleFeature(row)"
 											labelPosition="start"
 											status="basic"
 										></nb-toggle>
@@ -60,6 +61,7 @@
 											<nb-checkbox
 												[checked]="enabledFeature(child)"
 												(checkedChange)="featureChanged($event, child)"
+												[disabled]="!canToggleFeature(child)"
 												status="basic"
 											>
 												{{

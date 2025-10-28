@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { IFeature, IFeatureOrganization, IFeatureOrganizationUpdateInput, ITenant } from '@gauzy/contracts';
+import { FeatureEnum, IFeature, IFeatureOrganization, IFeatureOrganizationUpdateInput, ITenant } from '@gauzy/contracts';
 import { isNotEmpty } from '@gauzy/utils';
 import { TenantAwareCrudService } from './../core/crud';
 import { RequestContext } from './../core/context';
@@ -67,6 +67,7 @@ export class FeatureOrganizationService extends TenantAwareCrudService<FeatureOr
 
 	/**
 	 * Create/Update feature organization for relative tenants.
+	 * Excludes FEATURE_PLATFORM_ADMIN as it should only be available to platform admin tenant.
 	 *
 	 * @param tenants An array of ITenant instances.
 	 * @returns A Promise resolving to an array of IFeatureOrganization.
@@ -80,6 +81,11 @@ export class FeatureOrganizationService extends TenantAwareCrudService<FeatureOr
 		const features: IFeature[] = await this._featureService.find();
 
 		for (const feature of features) {
+			// Skip FEATURE_PLATFORM_ADMIN - it should only be available to platform admin tenant
+			if (feature.code === FeatureEnum.FEATURE_PLATFORM_ADMIN) {
+				continue;
+			}
+
 			const isEnabled = feature.isEnabled;
 			const tenantFeatureOrganizations = tenants.map(
 				(tenant) =>

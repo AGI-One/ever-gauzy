@@ -3518,7 +3518,8 @@
 		"ROLES_PERMISSIONS": "Roles & Permissions",
 		"TIME_TRACKING": "Time Tracking",
 		"ESTIMATE": "Estimate",
-		"DASHBOARD": "Dashboard"
+		"DASHBOARD": "Dashboard",
+		"PLATFORM_ADMINISTRATION": "Platform Administration"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3616,6 +3617,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Go to dashboard, Manage Employee Statistics, Time Tracking Dashboard"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Platform-level administration for managing customer tenants"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

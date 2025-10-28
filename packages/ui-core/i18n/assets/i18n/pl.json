@@ -3388,7 +3388,8 @@
 		"ROLES_PERMISSIONS": "Role i uprawnienia",
 		"TIME_TRACKING": "Śledzenie czasu",
 		"ESTIMATE": "Oszacowanie",
-		"DASHBOARD": "Panel nawigacyjny"
+		"DASHBOARD": "Panel nawigacyjny",
+		"PLATFORM_ADMINISTRATION": "Administracja platformą"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3486,6 +3487,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Przejdź do kokpitu, Zarządzanie statystykami pracowników, Kokpit śledzenia czasu"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Administracja na poziomie platformy do zarządzania najemcami klientów"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

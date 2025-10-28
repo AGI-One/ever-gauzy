@@ -3389,7 +3389,8 @@
 		"ROLES_PERMISSIONS": "Rollen & Machtigingen",
 		"TIME_TRACKING": "Tijdregistratie",
 		"ESTIMATE": "Schatting",
-		"DASHBOARD": "Dashboard"
+		"DASHBOARD": "Dashboard",
+		"PLATFORM_ADMINISTRATION": "Platformbeheer"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3487,6 +3488,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Ga naar het dashboard, Beheer personeelsstatistieken, Tijdregistratie-dashboard"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Platformniveaubeheer voor het beheren van klanttenant"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {
