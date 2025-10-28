@@ -223,7 +223,6 @@ export class UserService extends TenantAwareCrudService<User> {
 				const now = new Date();
 				const isExpired = user.tenant.expiresAt < now;
 				if (isExpired) {
-					console.log(`❌ OAuth Login: Tenant ${user.tenantId} subscription has expired at ${user.tenant.expiresAt}`);
 					throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
 				}
 			}
@@ -583,7 +582,6 @@ export class UserService extends TenantAwareCrudService<User> {
 				const now = new Date();
 				const isExpired = user.tenant.expiresAt < now;
 				if (isExpired) {
-					console.log(`❌ Tenant ${user.tenantId} subscription has expired at ${user.tenant.expiresAt}`);
 					throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
 				}
 			}

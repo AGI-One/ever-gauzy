@@ -153,7 +153,6 @@ export class AuthService extends SocialAuthService {
 					const now = new Date();
 					const isExpired = user.tenant.expiresAt < now;
 					if (isExpired) {
-						console.log(`❌ Tenant ${user.tenantId} subscription has expired at ${user.tenant.expiresAt}`);
 						throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
 					}
 				}
@@ -1216,7 +1215,6 @@ export class AuthService extends SocialAuthService {
 					const now = new Date();
 					const isExpired = user.tenant.expiresAt < now;
 					if (isExpired) {
-						console.log(`❌ Tenant ${user.tenantId} subscription has expired at ${user.tenant.expiresAt}`);
 						throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
 					}
 				}
@@ -1403,7 +1401,6 @@ export class AuthService extends SocialAuthService {
 				const now = new Date();
 				const isExpired = user.tenant.expiresAt < now;
 				if (isExpired) {
-					console.log(`❌ Skipping workspace for tenant ${user.tenantId} - subscription expired at ${user.tenant.expiresAt}`);
 					continue; // Skip this workspace/tenant if expired
 				}
 			}
@@ -1608,7 +1605,6 @@ export class AuthService extends SocialAuthService {
 				const now = new Date();
 				const isExpired = targetUser.tenant.expiresAt < now;
 				if (isExpired) {
-					console.log(`❌ Tenant ${targetUser.tenantId} subscription has expired at ${targetUser.tenant.expiresAt}`);
 					throw new UnauthorizedException('This workspace subscription has expired. Please renew your subscription to continue.');
 				}
 			}

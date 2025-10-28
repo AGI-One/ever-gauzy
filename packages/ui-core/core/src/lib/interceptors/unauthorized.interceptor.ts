@@ -29,7 +29,6 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
                         request.url.includes('/auth/refresh-token');
 
                     if (!isAuthEndpoint) {
-                        console.log('❌ 401 Unauthorized - Logging out user');
                         this.handleUnauthorized(error);
                     }
                 }
