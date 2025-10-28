@@ -6,4 +6,5 @@ export * from './platform-admin.guard';
 export * from './role.guard';
 export * from './tenant-base.guard';
 export * from './tenant-permission.guard';
+export * from './tenant-expiration.guard';
 export * from './feature-flag.guard';

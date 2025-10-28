@@ -31,7 +31,7 @@ import {
 	WorkspaceSigninVerifyTokenCommand
 } from './commands';
 import { RequestContext } from '../core/context';
-import { AuthRefreshGuard, TenantPermissionGuard } from './../shared/guards';
+import { AuthRefreshGuard, TenantPermissionGuard, TenantExpirationGuard } from './../shared/guards';
 import { UseValidationPipe } from '../shared/pipes';
 import { ChangePasswordRequestDTO, ResetPasswordRequestDTO } from './../password-reset/dto';
 import { RegisterUserDTO, UserEmailDTO, UserLoginDTO, UserSigninWorkspaceDTO } from './../user/dto';
@@ -53,7 +53,7 @@ export class AuthController {
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
 		private readonly commandBus: CommandBus
-	) {}
+	) { }
 
 	/**
 	 * Check if the user is authenticated.
@@ -145,6 +145,7 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('/login')
 	@Public()
+	@UseGuards(TenantExpirationGuard)
 	@UseValidationPipe({ transform: true })
 	async login(@Body() input: UserLoginDTO): Promise<IAuthResponse | null> {
 		return await this.commandBus.execute(new AuthLoginCommand(input));
@@ -158,6 +159,7 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('/signin.email.password')
 	@Public()
+	@UseGuards(TenantExpirationGuard)
 	@UseValidationPipe()
 	async signinWorkspacesByPassword(@Body() input: UserSigninWorkspaceDTO): Promise<IUserSigninWorkspaceResponse> {
 		return await this.authService.signinWorkspacesByEmailPassword(input, parseToBoolean(input.includeTeams));
@@ -189,6 +191,7 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('/signin.email.social')
 	@Public()
+	@UseGuards(TenantExpirationGuard)
 	@UseValidationPipe()
 	async signinWorkspacesBySocial(@Body() input: SocialLoginBodyRequestDTO): Promise<IUserSigninWorkspaceResponse> {
 		return await this.authService.signinWorkspacesByEmailSocial(input, parseToBoolean(input.includeTeams));
@@ -240,6 +243,7 @@ export class AuthController {
 	 */
 	@Post('/signin.workspace')
 	@Public()
+	@UseGuards(TenantExpirationGuard)
 	@UseValidationPipe({ whitelist: true })
 	async signinWorkspaceByToken(@Body() input: WorkspaceSigninDTO): Promise<IAuthResponse | null> {
 		return await this.commandBus.execute(new WorkspaceSigninVerifyTokenCommand(input));
@@ -298,7 +302,7 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@ApiOperation({ summary: 'Refresh token' })
 	@Public()
-	@UseGuards(AuthRefreshGuard)
+	@UseGuards(AuthRefreshGuard, TenantExpirationGuard)
 	@Post('/refresh-token')
 	@UseValidationPipe()
 	async refreshToken(@Body() input: RefreshTokenDto): Promise<{ token: string } | null> {
@@ -326,7 +330,7 @@ export class AuthController {
 	})
 	@HttpCode(HttpStatus.OK)
 	@Get('/workspaces')
-	@UseGuards(TenantPermissionGuard)
+	@UseGuards(TenantPermissionGuard, TenantExpirationGuard)
 	async getUserWorkspaces(@Query('includeTeams') includeTeams?: string): Promise<IUserSigninWorkspaceResponse> {
 		return await this.authService.getUserWorkspaces(parseToBoolean(includeTeams));
 	}
@@ -356,7 +360,7 @@ export class AuthController {
 	})
 	@HttpCode(HttpStatus.OK)
 	@Post('/switch-workspace')
-	@UseGuards(TenantPermissionGuard)
+	@UseGuards(TenantPermissionGuard, TenantExpirationGuard)
 	@UseValidationPipe({ whitelist: true })
 	async switchWorkspace(@Body() input: SwitchWorkspaceDTO): Promise<IAuthResponse | null> {
 		return await this.authService.switchWorkspace(input.tenantId);

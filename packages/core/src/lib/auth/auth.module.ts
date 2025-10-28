@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { HttpModule } from '@nestjs/axios';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { SocialAuthModule } from '@gauzy/auth';
 import { EventBusModule } from '../event-bus/event-bus.module';
 import { EmailSendModule } from '../email-send/email-send.module';
@@ -21,6 +22,8 @@ import { FeatureModule } from '../feature/feature.module';
 import { SocialAccountModule } from './social-account/social-account.module';
 import { UserOrganizationModule } from '../user-organization/user-organization.module';
 import { RolePermissionModule } from '../role-permission/role-permission.module';
+import { TenantModule } from '../tenant/tenant.module';
+import { Tenant } from '../tenant/tenant.entity';
 
 // Core service providers for handling authentication and related functionalities
 const providers = [AuthService, EmailConfirmationService, UserOrganizationService];
@@ -30,6 +33,7 @@ const strategies = [JwtStrategy, JwtRefreshTokenStrategy];
 
 @Module({
 	imports: [
+		TypeOrmModule.forFeature([Tenant]),
 		SocialAuthModule.registerAsync({
 			imports: [
 				HttpModule,
@@ -61,10 +65,11 @@ const strategies = [JwtStrategy, JwtRefreshTokenStrategy];
 		CqrsModule,
 		SocialAccountModule,
 		EventBusModule,
-		RolePermissionModule
+		RolePermissionModule,
+		forwardRef(() => TenantModule)
 	],
 	controllers: [AuthController, EmailVerificationController],
 	providers: [...providers, ...CommandHandlers, ...strategies],
 	exports: [...providers]
 })
-export class AuthModule {}
+export class AuthModule { }
