@@ -37,10 +37,11 @@ export class GithubController {
 
 		// To-DO: Determine the frontend URL based on the request
 
-		const { success, authData } = await this.service.validateOAuthLoginEmail(user.emails);
+		const { success, authData, error } = await this.service.validateOAuthLoginEmail(user.emails);
 
 		// Redirect to success or failed page based on the result
-		const errorMessage = !success ? 'Account does not exist. Please contact your administrator.' : undefined;
+		// Use specific error message if available, otherwise use default
+		const errorMessage = error || (!success ? 'Account does not exist. Please contact your administrator.' : undefined);
 		return this.service.routeRedirect(success, authData, _res, errorMessage);
 	}
 }

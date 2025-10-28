@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from '@angular/common/http';
-import { concatMap, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthStrategy } from '../auth';
 import { ElectronService } from '../electron/services';
@@ -14,7 +14,7 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
 		private electronService: ElectronService,
 		private router: Router,
 		private store: Store
-	) {}
+	) { }
 
 	intercept(
 		request: HttpRequest<any>,
@@ -24,20 +24,38 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
 			catchError((error) => {
 				// Early return if offline is triggered.
 				if (this.store.isOffline) {
-					return;
+					return throwError(() => error);
 				}
 				// Unauthorized error occurred
 				if (error.status === HttpStatusCode.Unauthorized) {
+					// Extract error message from response
+					const errorMessage = error.error?.message || 'Your session has expired. Please login again.';
+
 					// Log out the user
-					this.authStrategy.logout();
-					// logout from desktop
-					this.electronService.ipcRenderer.send('logout');
-					// redirect to login page
-					concatMap(() =>
-						this.router.navigate(['auth', 'login'], {
-							queryParams: { returnUrl: this.router.url },
-						})
-					);
+					this.authStrategy.logout().subscribe({
+						next: () => {
+							// logout from desktop
+							this.electronService.ipcRenderer.send('logout');
+
+							// redirect to login page with error message
+							this.router.navigate(['auth', 'login'], {
+								queryParams: {
+									returnUrl: this.router.url,
+									error: encodeURIComponent(errorMessage)
+								}
+							});
+						},
+						error: (err) => {
+							console.error('Error during logout:', err);
+							// Still redirect even if logout fails
+							this.electronService.ipcRenderer.send('logout');
+							this.router.navigate(['auth', 'login'], {
+								queryParams: {
+									error: encodeURIComponent(errorMessage)
+								}
+							});
+						}
+					});
 				}
 				return throwError(() => error);
 			})

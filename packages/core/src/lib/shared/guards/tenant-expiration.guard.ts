@@ -34,7 +34,10 @@ export class TenantExpirationGuard implements CanActivate {
 		const tenantId = RequestContext.currentTenantId();
 
 		// Allow public routes (no tenant context needed)
+		// NOTE: This guard runs AFTER authentication, so it won't work for login routes
+		// For login routes, tenant expiration must be checked in the service layer
 		if (!tenantId) {
+			console.log('⚠️ TenantExpirationGuard: No tenantId in context - allowing request (public route or pre-authentication)');
 			return true;
 		}
 
