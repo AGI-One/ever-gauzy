@@ -1,0 +1,163 @@
+.tenants-container {
+	padding: 20px;
+
+	.header-section {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 24px;
+		gap: 16px;
+
+		.header-content {
+			h3 {
+				margin: 0;
+				font-weight: 600;
+			}
+
+			p {
+				margin: 8px 0 0;
+			}
+		}
+
+		.header-actions {
+			button {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+		}
+	}
+
+	.search-card {
+		margin-bottom: 20px;
+
+		.search-section {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+
+			input {
+				flex: 1;
+			}
+		}
+	}
+
+	.table-container {
+		overflow-x: auto;
+
+		.empty-state {
+			text-align: center;
+			padding: 60px 20px;
+
+			.empty-icon {
+				font-size: 64px;
+				color: var(--gauzy-text-hint);
+				margin-bottom: 16px;
+			}
+
+			h5 {
+				margin: 0 0 8px;
+			}
+
+			p {
+				margin: 0;
+			}
+		}
+
+		.tenants-table {
+			width: 100%;
+			border-collapse: collapse;
+
+			thead {
+				tr {
+					th {
+						padding: 12px 16px;
+						text-align: left;
+						font-weight: 600;
+						font-size: 12px;
+						text-transform: uppercase;
+						letter-spacing: 0.5px;
+						color: var(--gauzy-text-hint);
+						border-bottom: 2px solid var(--gauzy-border-basic);
+					}
+				}
+			}
+
+			tbody {
+				.tenant-row {
+					cursor: pointer;
+					transition: background-color 0.2s ease;
+
+					&:hover {
+						background-color: var(--gauzy-card-bg);
+					}
+
+					td {
+						padding: 16px;
+						border-bottom: 1px solid var(--gauzy-border-basic);
+
+						.tenant-name {
+							display: flex;
+							align-items: center;
+							gap: 12px;
+
+							.tenant-logo {
+								width: 40px;
+								height: 40px;
+								border-radius: 8px;
+								object-fit: cover;
+							}
+
+							.tenant-logo-placeholder {
+								width: 40px;
+								height: 40px;
+								border-radius: 8px;
+								background: var(--gauzy-primary);
+								color: white;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								font-weight: 600;
+								font-size: 18px;
+							}
+						}
+
+						.stat-value {
+							font-weight: 500;
+						}
+
+						.action-buttons {
+							display: flex;
+							gap: 8px;
+
+							button {
+								min-width: auto;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Responsive
+@media (max-width: 768px) {
+	.tenants-container {
+		.header-section {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.table-container {
+			.tenants-table {
+				font-size: 14px;
+
+				td,
+				th {
+					padding: 8px;
+				}
+			}
+		}
+	}
+}

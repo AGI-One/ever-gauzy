@@ -13,6 +13,13 @@ export class TenantBaseGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		console.log('TenantBaseGuard canActivate called');
 
+		// 🌟 PLATFORM ADMIN BYPASS: Platform Admin has access to everything
+		const currentUser = RequestContext.currentUser();
+		if (currentUser && currentUser.role?.name === 'PLATFORM_ADMIN') {
+			console.log('🚀 Platform Admin detected - bypassing tenant base checks');
+			return true;
+		}
+
 		const currentTenantId = RequestContext.currentTenantId();
 		const request: any = context.switchToHttp().getRequest();
 		const method: RequestMethodEnum = request.method;

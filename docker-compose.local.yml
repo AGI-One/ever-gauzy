@@ -1,0 +1,23 @@
+services:
+  gauzy-app:
+    image: gauzy-app
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+      - 4200:4200
+    networks:
+      - overlay
+    env_file:
+      - .env
+networks:
+  overlay:
+    name: overlay
+    external: true

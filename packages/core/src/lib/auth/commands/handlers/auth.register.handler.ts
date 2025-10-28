@@ -1,13 +1,18 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UnauthorizedException, BadRequestException } from '@nestjs/common';
-import { IUser, RolesEnum } from '@gauzy/contracts';
+import { UnauthorizedException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { IUser, RolesEnum, FeatureEnum } from '@gauzy/contracts';
 import { AuthRegisterCommand } from '../auth.register.command';
 import { AuthService } from '../../auth.service';
 import { UserService } from '../../../user/user.service';
+import { FeatureService } from '../../../feature/feature.service';
 
 @CommandHandler(AuthRegisterCommand)
 export class AuthRegisterHandler implements ICommandHandler<AuthRegisterCommand> {
-	constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
+	constructor(
+		private readonly authService: AuthService,
+		private readonly userService: UserService,
+		private readonly featureService: FeatureService
+	) { }
 
 	/**
 	 * Executes the user registration command, handling specific checks for SUPER_ADMIN role.
@@ -16,9 +21,16 @@ export class AuthRegisterHandler implements ICommandHandler<AuthRegisterCommand>
 	 * @returns A Promise resolving to the registered IUser object.
 	 * @throws BadRequestException if input is missing required fields.
 	 * @throws UnauthorizedException if the user initiating registration is not authorized.
+	 * @throws ForbiddenException if platform admin mode is enabled and registration is disabled.
 	 */
 	public async execute(command: AuthRegisterCommand): Promise<IUser> {
 		const { input, languageCode } = command;
+
+		// Check if FEATURE_PLATFORM_ADMIN is enabled - if yes, block all registrations
+		const isPlatformAdminEnabled = await this.featureService.isFeatureEnabled(FeatureEnum.FEATURE_PLATFORM_ADMIN);
+		if (isPlatformAdminEnabled) {
+			throw new ForbiddenException('Registration is disabled when platform admin mode is enabled.');
+		}
 
 		// Check if the user role is SUPER_ADMIN and require 'createdByUserId' for verification
 		if (input.user && input.user.role && input.user.role.name === RolesEnum.SUPER_ADMIN) {

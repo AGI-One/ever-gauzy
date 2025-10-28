@@ -6,7 +6,7 @@ import { API_PREFIX } from '@gauzy/ui-core/common';
 
 @Injectable()
 export class TenantService {
-	constructor(private readonly http: HttpClient) {}
+	constructor(private readonly http: HttpClient) { }
 
 	API_URL = `${API_PREFIX}/tenant`;
 
@@ -18,6 +18,16 @@ export class TenantService {
 	 */
 	create(input: ITenantCreateInput): Promise<ITenant> {
 		return firstValueFrom(this.http.post<ITenant>(`${this.API_URL}`, input));
+	}
+
+	/**
+	 * Updates the current user's tenant.
+	 *
+	 * @param {Partial<ITenant>} input - The partial tenant data to update.
+	 * @returns {Promise<ITenant>} - A promise that resolves to the updated tenant.
+	 */
+	update(input: Partial<ITenant>): Promise<ITenant> {
+		return firstValueFrom(this.http.put<ITenant>(`${this.API_URL}`, input));
 	}
 
 	/**

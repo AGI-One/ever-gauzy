@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { filter, firstValueFrom, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IOrganization, IOrganizationCreateInput, IUser } from '@gauzy/contracts';
+import { IOrganization, IOrganizationCreateInput, IUser, FeatureEnum } from '@gauzy/contracts';
 import {
 	AuthService,
 	EmployeesService,
@@ -15,10 +15,10 @@ import {
 
 @UntilDestroy()
 @Component({
-    selector: 'ga-tenant-onboarding',
-    templateUrl: './tenant-onboarding.component.html',
-    styleUrls: ['./tenant-onboarding.component.scss'],
-    standalone: false
+	selector: 'ga-tenant-onboarding',
+	templateUrl: './tenant-onboarding.component.html',
+	styleUrls: ['./tenant-onboarding.component.scss'],
+	standalone: false
 })
 export class TenantOnboardingComponent implements OnInit, OnDestroy {
 	public loading: boolean = true;
@@ -34,13 +34,16 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		private readonly _authService: AuthService,
 		private readonly _employeesService: EmployeesService,
 		private readonly _errorHandlingService: ErrorHandlingService
-	) {}
+	) { }
 
 	ngOnInit() {
 		this._activatedRoute.data
 			.pipe(
 				filter(({ user }: Data) => !!user),
-				tap(({ user }: Data) => (this._store.user = user)),
+				tap(({ user }: Data) => {
+					this._store.user = user;
+					this.user = user;
+				}),
 				tap(() => (this.loading = false)),
 				// Handle component lifecycle to avoid memory leaks
 				untilDestroyed(this)
@@ -57,26 +60,71 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		this.loading = true;
 
 		try {
-			const tenant = await this._tenantService.create({ name: organization.name });
-			this.user = await this._usersService.getMe(['tenant']);
-			this._store.user = this.user;
+			// Check if FEATURE_PLATFORM_ADMIN is enabled
+			const isPlatformAdminFeatureEnabled = this._store.hasFeatureEnabled(FeatureEnum.FEATURE_PLATFORM_ADMIN);
+
+			let tenant;
+			let shouldUpdateTenant = false;
+
+			// If user already has a tenant (created by platform admin or already exists)
+			if (this.user?.tenantId) {
+				// User already has a tenant, use it instead of creating a new one
+				this.user = await this._usersService.getMe(['tenant', 'organizations']);
+				tenant = this.user.tenant;
+				this._store.user = this.user;
+				shouldUpdateTenant = true; // Flag to update tenant info later
+			} else if (isPlatformAdminFeatureEnabled) {
+				// Platform admin feature is enabled but user has no tenant - not allowed
+				throw new Error('Only platform administrators can create tenants. Please contact your administrator.');
+			} else {
+				// Platform admin feature is disabled, allow self-service tenant creation
+				tenant = await this._tenantService.create({ name: organization.name });
+				this.user = await this._usersService.getMe(['tenant']);
+				this._store.user = this.user;
+			}
 
 			try {
+				// Create organization
 				const createdOrganization = await this._organizationsService.create({
 					...organization,
 					tenant,
 					isDefault: true
 				});
 
+				// Update tenant info if needed (when user already had a tenant from platform admin)
+				if (shouldUpdateTenant) {
+					// Update tenant with organization information
+					const tenantUpdateData: any = {};
+
+					// Update name if provided
+					if (organization.name) {
+						tenantUpdateData.name = organization.name;
+					}
+
+					// Update logo if provided (can be from imageUrl or imageId)
+					if (organization.imageUrl) {
+						tenantUpdateData.logo = organization.imageUrl;
+					}
+
+					if (organization.imageId) {
+						tenantUpdateData.imageId = organization.imageId;
+					}
+
+					// Only update if there's data to update
+					if (Object.keys(tenantUpdateData).length > 0) {
+						await this._tenantService.update(tenantUpdateData);
+					}
+				}
+
 				await this.getAccessTokenFromRefreshToken();
-				this.registerEmployeeFeature(organization, createdOrganization); // Process in the background
+				await this.registerEmployeeFeature(organization, createdOrganization);
 
 				this._router.navigate(['/onboarding/complete']);
 			} catch (error) {
 				console.error('Error while creating organization:', error);
 			}
 		} catch (error) {
-			console.error('Error while creating tenant:', error);
+			console.error('Error while onboarding user:', error);
 			// Handle and log errors using the _errorHandlingService
 			this._errorHandlingService.handleError(error);
 		} finally {
@@ -134,5 +182,5 @@ export class TenantOnboardingComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

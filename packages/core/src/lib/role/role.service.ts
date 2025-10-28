@@ -28,8 +28,35 @@ export class RoleService extends TenantAwareCrudService<Role> {
 		const roles: IRole[] = [];
 		const rolesNames = Object.values(RolesEnum);
 
+		// Check if PLATFORM_ADMIN role already exists in database
+		const existingPlatformAdminRole = await this.typeOrmRepository.findOne({
+			where: { name: RolesEnum.PLATFORM_ADMIN }
+		});
+
 		for await (const tenant of tenants) {
 			for await (const name of rolesNames) {
+				// Handle PLATFORM_ADMIN role creation logic
+				if (name === RolesEnum.PLATFORM_ADMIN) {
+					// If PLATFORM_ADMIN role doesn't exist yet, allow creation for this tenant
+					if (!existingPlatformAdminRole) {
+						const role = new Role();
+						role.name = name;
+						role.tenant = tenant;
+						role.isSystem = SYSTEM_DEFAULT_ROLES.includes(name);
+						roles.push(role);
+					}
+					// If PLATFORM_ADMIN role exists and belongs to this tenant, allow creation
+					else if (existingPlatformAdminRole.tenantId === tenant.id) {
+						const role = new Role();
+						role.name = name;
+						role.tenant = tenant;
+						role.isSystem = SYSTEM_DEFAULT_ROLES.includes(name);
+						roles.push(role);
+					}
+					// Otherwise, skip creation (PLATFORM_ADMIN already exists for different tenant)
+					continue;
+				}
+
 				const role = new Role();
 				role.name = name;
 				role.tenant = tenant;
@@ -38,6 +65,22 @@ export class RoleService extends TenantAwareCrudService<Role> {
 			}
 		}
 		return await this.typeOrmRepository.save(roles);
+	}
+
+	/**
+	 * Find roles by tenant ID without TenantAwareCrudService filtering.
+	 * This is used when Platform Admin creates a new tenant - we need to find roles
+	 * for the newly created tenant, not the current user's tenant.
+	 *
+	 * @param tenantId - The tenant ID to find roles for
+	 * @returns A promise that resolves to an array of roles
+	 */
+	async findRolesByTenantId(tenantId: string): Promise<IRole[]> {
+		return await this.typeOrmRepository.find({
+			where: {
+				tenantId
+			}
+		});
 	}
 
 	async migrateRoles(): Promise<IRoleMigrateInput[]> {

@@ -24,3 +24,15 @@ export const DEFAULT_ADMINS = [
 		preferredComponentLayout: ComponentLayoutStyleEnum.TABLE
 	}
 ];
+
+export const DEFAULT_PLATFORM_ADMINS = [
+	{
+		email: environment.platformAdmin?.email || process.env.PLATFORM_ADMIN_EMAIL || 'platform-admin@ever.co',
+		password: environment.platformAdmin?.password || process.env.PLATFORM_ADMIN_PASSWORD || '123456',
+		firstName: 'Platform',
+		lastName: 'Admin',
+		imageUrl: 'assets/images/avatars/avatar-default.svg',
+		preferredLanguage: LanguagesEnum.ENGLISH,
+		preferredComponentLayout: ComponentLayoutStyleEnum.TABLE
+	}
+];

@@ -300,6 +300,11 @@ export const environment: IEnvironment = {
 		adminPassword: process.env.DEMO_ADMIN_PASSWORD || `admin`,
 		employeeEmail: process.env.DEMO_EMPLOYEE_EMAIL || `employee@ever.co`,
 		employeePassword: process.env.DEMO_EMPLOYEE_PASSWORD || `123456`
+	},
+
+	platformAdmin: {
+		email: process.env.PLATFORM_ADMIN_EMAIL || `platform-admin@gauzy.co`,
+		password: process.env.PLATFORM_ADMIN_PASSWORD || `PlatformAdmin@123`
 	}
 };
 
@@ -368,5 +373,6 @@ export const gauzyToggleFeatures: IGauzyFeatures = {
 	FEATURE_SMTP: isFeatureEnabled('FEATURE_SMTP'),
 	FEATURE_ROLES_PERMISSION: isFeatureEnabled('FEATURE_ROLES_PERMISSION'),
 	FEATURE_EMAIL_VERIFICATION: isFeatureEnabled('FEATURE_EMAIL_VERIFICATION'),
-	FEATURE_OPEN_STATS: process.env.FEATURE_OPEN_STATS === 'true' // enable/disable global open stats endpoint configuration
+	FEATURE_OPEN_STATS: process.env.FEATURE_OPEN_STATS === 'true', // enable/disable global open stats endpoint configuration
+	FEATURE_PLATFORM_ADMIN: isFeatureEnabled('FEATURE_PLATFORM_ADMIN') // enable/disable platform administration
 };

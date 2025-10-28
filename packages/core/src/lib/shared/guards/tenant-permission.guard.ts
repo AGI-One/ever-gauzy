@@ -28,6 +28,13 @@ export class TenantPermissionGuard extends TenantBaseGuard implements CanActivat
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		console.log('TenantPermissionGuard canActivate called');
 
+		// 🌟 PLATFORM ADMIN BYPASS: Platform Admin has access to everything
+		const currentUser = RequestContext.currentUser();
+		if (currentUser && currentUser.role?.name === 'PLATFORM_ADMIN') {
+			console.log('🚀 Platform Admin detected - bypassing tenant permission checks');
+			return true;
+		}
+
 		const tenantId = RequestContext.currentTenantId();
 		const roleId = RequestContext.currentRoleId();
 

@@ -1,0 +1,126 @@
+<div class="dashboard-container">
+	<!-- Header -->
+	<div class="header mb-4">
+		<h3>{{ 'PLATFORM_ADMIN.DASHBOARD.TITLE' | translate }}</h3>
+		<p class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.SUBTITLE' | translate }}</p>
+	</div>
+
+	<!-- Loading Spinner -->
+	<nb-card *ngIf="loading">
+		<nb-card-body class="text-center">
+			<nb-spinner size="large" status="primary"></nb-spinner>
+		</nb-card-body>
+	</nb-card>
+
+	<!-- Stats Cards -->
+	<div class="stats-grid" *ngIf="!loading && stats">
+		<!-- Total Tenants -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="primary">
+						<nb-icon icon="briefcase-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.TOTAL_TENANTS' | translate }}</h6>
+						<h3>{{ stats.totalTenants }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Active Tenants -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="success">
+						<nb-icon icon="checkmark-circle-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.ACTIVE_TENANTS' | translate }}</h6>
+						<h3>{{ stats.activeTenants }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Expired Tenants -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="danger">
+						<nb-icon icon="close-circle-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.EXPIRED_TENANTS' | translate }}</h6>
+						<h3>{{ stats.expiredTenants }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Expiring Soon -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="warning">
+						<nb-icon icon="alert-triangle-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.EXPIRING_SOON' | translate }}</h6>
+						<h3>{{ stats.expiringSoon }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Total Users -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="info">
+						<nb-icon icon="people-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.TOTAL_USERS' | translate }}</h6>
+						<h3>{{ stats.totalUsers }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Total Organizations -->
+		<nb-card class="stat-card">
+			<nb-card-body>
+				<div class="stat-content">
+					<div class="stat-icon" status="primary">
+						<nb-icon icon="globe-outline"></nb-icon>
+					</div>
+					<div class="stat-info">
+						<h6 class="text-muted">{{ 'PLATFORM_ADMIN.DASHBOARD.TOTAL_ORGANIZATIONS' | translate }}</h6>
+						<h3>{{ stats.totalOrganizations }}</h3>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+	</div>
+
+	<!-- Quick Actions -->
+	<div class="quick-actions mt-4" *ngIf="!loading">
+		<nb-card>
+			<nb-card-header>{{ 'PLATFORM_ADMIN.DASHBOARD.QUICK_ACTIONS' | translate }}</nb-card-header>
+			<nb-card-body>
+				<div class="actions-grid">
+					<button nbButton status="primary" routerLink="/platform-admin/tenants/create">
+						<nb-icon icon="plus-outline"></nb-icon>
+						{{ 'PLATFORM_ADMIN.DASHBOARD.CREATE_TENANT' | translate }}
+					</button>
+					<button nbButton status="basic" routerLink="/platform-admin/tenants">
+						<nb-icon icon="list-outline"></nb-icon>
+						{{ 'PLATFORM_ADMIN.DASHBOARD.VIEW_ALL_TENANTS' | translate }}
+					</button>
+				</div>
+			</nb-card-body>
+		</nb-card>
+	</div>
+</div>

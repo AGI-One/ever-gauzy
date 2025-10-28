@@ -19,6 +19,7 @@ export * from './lib/shared';
 export * from './lib/event-bus';
 
 export * from './lib/tenant';
+export { PlatformAdminModule, PlatformAdminService } from './lib/platform-admin';
 export { RoleModule, RoleService } from './lib/role';
 export { RolePermissionModule, RolePermissionService } from './lib/role-permission';
 export { UserModule, UserService } from './lib/user';

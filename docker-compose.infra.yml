@@ -19,6 +19,8 @@ services:
       - '5432:5432'
     networks:
       - overlay
+    env_file:
+      - .env
 
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim:latest
@@ -35,6 +37,8 @@ services:
       - 9411:9411
     networks:
       - overlay
+    env_file:
+      - .env
 
   cube:
     image: cubejs/cube:latest
@@ -60,6 +64,8 @@ services:
       - db
     networks:
       - overlay
+    env_file:
+      - .env
 
   jitsu:
     container_name: jitsu
@@ -90,6 +96,8 @@ services:
       - '8000:8000'
     networks:
       - overlay
+    env_file:
+      - .env
 
   opensearch:
     image: opensearchproject/opensearch:latest
@@ -119,6 +127,8 @@ services:
       - 9600:9600
     networks:
       - overlay
+    env_file:
+      - .env
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:latest
@@ -131,6 +141,8 @@ services:
       OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
     networks:
       - overlay
+    env_file:
+      - .env
 
   # Search Management UI
   dejavu:
@@ -142,6 +154,8 @@ services:
       - opensearch
     networks:
       - overlay
+    env_file:
+      - .env
 
   # TODO: For now used in Jitsu, but we will need to create another one dedicated for Jitsu later
   redis:
@@ -158,6 +172,8 @@ services:
       - ./.deploy/redis/data:/data
     networks:
       - overlay
+    env_file:
+      - .env
 
   jitsu_redis_users_recognition:
     image: 'redis:alpine'
@@ -175,6 +191,8 @@ services:
       - ./.deploy/redis/jitsu_users_recognition/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - overlay
+    env_file:
+      - .env
 
   minio:
     restart: unless-stopped
@@ -196,6 +214,8 @@ services:
       - 9001:9001
     networks:
       - overlay
+    env_file:
+      - .env
 
   minio_create_buckets:
     image: minio/mc
@@ -220,6 +240,8 @@ services:
         condition: service_healthy
     networks:
       - overlay
+    env_file:
+      - .env
 
   pgweb:
     image: sosedoff/pgweb
@@ -238,6 +260,8 @@ services:
       - '8081:8081'
     networks:
       - overlay
+    env_file:
+      - .env
 
 volumes:
   postgres_data: {}
@@ -251,3 +275,4 @@ volumes:
 networks:
   overlay:
     driver: bridge
+    name: overlay

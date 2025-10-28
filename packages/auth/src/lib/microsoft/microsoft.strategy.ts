@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { AxiosResponse } from 'axios';
+import { Request } from 'express';
 import { Strategy, StrategyOptionsWithRequest } from 'passport-microsoft';
 import { firstValueFrom, map } from 'rxjs';
 
@@ -16,12 +17,14 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'microsoft') {
 	 * Validates the provided tokens and retrieves the user's profile information
 	 * from the Microsoft Graph API.
 	 *
+	 * @param request - The incoming request object (when passReqToCallback is true).
 	 * @param accessToken - The access token for Microsoft Graph API.
 	 * @param refreshToken - The refresh token (unused in this example).
 	 * @param profile - The initial profile information (may be overwritten).
 	 * @param done - The callback to pass either the error or the user object.
 	 */
 	async validate(
+		request: Request,
 		accessToken: string,
 		refreshToken: string,
 		profile: any,

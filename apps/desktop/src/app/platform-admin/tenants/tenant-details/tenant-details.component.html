@@ -1,0 +1,104 @@
+<div class="tenant-details-container">
+	<!-- Header -->
+	<div class="header mb-4">
+		<div class="header-left">
+			<button nbButton status="basic" size="small" (click)="goBack()">
+				<nb-icon icon="arrow-back-outline"></nb-icon>
+			</button>
+			<div class="header-content">
+				<h3>{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.TITLE' | translate }}</h3>
+			</div>
+		</div>
+		<div class="header-actions">
+			<button nbButton status="primary" size="medium" (click)="edit()" *ngIf="!loading && tenant">
+				<nb-icon icon="edit-outline"></nb-icon>
+				{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.EDIT' | translate }}
+			</button>
+		</div>
+	</div>
+
+	<!-- Loading -->
+	<nb-card *ngIf="loading">
+		<nb-card-body class="text-center">
+			<nb-spinner size="large" status="primary"></nb-spinner>
+		</nb-card-body>
+	</nb-card>
+
+	<!-- Tenant Details -->
+	<div *ngIf="!loading && tenant" class="details-grid">
+		<!-- Basic Information -->
+		<nb-card>
+			<nb-card-header>
+				{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.BASIC_INFO' | translate }}
+			</nb-card-header>
+			<nb-card-body>
+				<div class="tenant-header">
+					<img *ngIf="tenant.logo" [src]="tenant.logo" [alt]="tenant.name" class="tenant-logo" />
+					<div class="tenant-logo-placeholder" *ngIf="!tenant.logo">
+						{{ tenant.name?.charAt(0)?.toUpperCase() }}
+					</div>
+					<div class="tenant-info">
+						<h4>{{ tenant.name }}</h4>
+						<nb-badge [status]="getStatusBadge()">
+							{{ tenant.isActive ? ('PLATFORM_ADMIN.TENANTS.STATUS.ACTIVE' | translate) : ('PLATFORM_ADMIN.TENANTS.STATUS.INACTIVE' | translate) }}
+						</nb-badge>
+					</div>
+				</div>
+
+				<div class="info-grid">
+					<div class="info-item">
+						<span class="info-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.ID' | translate }}</span>
+						<span class="info-value">{{ tenant.id }}</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.CREATED_AT' | translate }}</span>
+						<span class="info-value">{{ tenant.createdAt | date : 'medium' }}</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.UPDATED_AT' | translate }}</span>
+						<span class="info-value">{{ tenant.updatedAt | date : 'medium' }}</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.EXPIRES_AT' | translate }}</span>
+						<span class="info-value">
+							<span *ngIf="tenant.expiresAt">{{ tenant.expiresAt | date : 'medium' }}</span>
+							<span *ngIf="!tenant.expiresAt" class="text-muted">-</span>
+						</span>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+
+		<!-- Statistics -->
+		<nb-card>
+			<nb-card-header>
+				{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.STATISTICS' | translate }}
+			</nb-card-header>
+			<nb-card-body>
+				<div class="stats-list">
+					<div class="stat-item">
+						<nb-icon icon="people-outline" status="info"></nb-icon>
+						<div class="stat-details">
+							<span class="stat-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.TOTAL_USERS' | translate }}</span>
+							<span class="stat-value">{{ tenant.stats?.userCount || 0 }}</span>
+						</div>
+					</div>
+					<div class="stat-item">
+						<nb-icon icon="globe-outline" status="primary"></nb-icon>
+						<div class="stat-details">
+							<span class="stat-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.TOTAL_ORGANIZATIONS' | translate }}</span>
+							<span class="stat-value">{{ tenant.stats?.organizationCount || 0 }}</span>
+						</div>
+					</div>
+					<div class="stat-item" *ngIf="tenant.daysUntilExpiration !== undefined">
+						<nb-icon icon="calendar-outline" status="warning"></nb-icon>
+						<div class="stat-details">
+							<span class="stat-label">{{ 'PLATFORM_ADMIN.TENANTS.DETAILS.DAYS_UNTIL_EXPIRATION' | translate }}</span>
+							<span class="stat-value">{{ tenant.daysUntilExpiration }} days</span>
+						</div>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+	</div>
+</div>

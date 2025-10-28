@@ -354,35 +354,32 @@ export class RolePermissionService extends TenantAwareCrudService<RolePermission
 		const deniedPermissions = [PermissionsEnum.ACCESS_DELETE_ACCOUNT, PermissionsEnum.ACCESS_DELETE_ALL_DATA];
 		const rolesPermissions: IRolePermission[] = [];
 		for await (const tenant of tenants) {
-			const roles = (
-				await this._roleService.findAll({
-					where: {
-						tenantId: tenant.id
-					}
-				})
-			).items;
+			// Use findRolesByTenantId to bypass TenantAwareCrudService filtering
+			// This is crucial when Platform Admin creates a new tenant - RequestContext still has "Ever" tenant
+			// but we need to find roles for the newly created tenant
+			const roles = await this._roleService.findRolesByTenantId(tenant.id);
 			for await (const role of roles) {
 				const defaultPermissions = DEFAULT_ROLE_PERMISSIONS.find(
 					(defaultRole) => role.name === defaultRole.role
 				);
+				if (!defaultPermissions) {
+					continue;
+				}
 				const permissions = Object.values(PermissionsEnum).filter((permission: PermissionsEnum) =>
 					environment.demo ? !deniedPermissions.includes(permission) : true
 				);
 				for await (const permission of permissions) {
-					if (defaultPermissions) {
-						const { defaultEnabledPermissions = [] } = defaultPermissions;
-						const rolePermission = new RolePermission();
-						rolePermission.roleId = role.id;
-						rolePermission.permission = permission;
-						rolePermission.enabled = defaultEnabledPermissions.includes(permission);
-						rolePermission.tenant = tenant;
-						rolesPermissions.push(rolePermission);
-					}
+					const { defaultEnabledPermissions = [] } = defaultPermissions;
+					const rolePermission = new RolePermission();
+					rolePermission.roleId = role.id;
+					rolePermission.permission = permission;
+					rolePermission.enabled = defaultEnabledPermissions.includes(permission);
+					rolePermission.tenant = tenant;
+					rolesPermissions.push(rolePermission);
 				}
 			}
 		}
-		await this.typeOrmRepository.save(rolesPermissions);
-		return rolesPermissions;
+		return await this.typeOrmRepository.save(rolesPermissions);
 	}
 
 	public async migratePermissions(): Promise<IRolePermissionMigrateInput[]> {

@@ -29,6 +29,13 @@ export class PermissionGuard extends BaseGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		console.log('PermissionGuard canActivate called');
 
+		// 🌟 PLATFORM ADMIN BYPASS: Platform Admin has access to everything
+		const currentUser = RequestContext.currentUser();
+		if (currentUser && currentUser.role?.name === 'PLATFORM_ADMIN') {
+			console.log('🚀 Platform Admin detected - bypassing permission checks');
+			return true;
+		}
+
 		// Retrieve permissions from metadata
 		const targets: Array<Function | Type<any>> = [context.getHandler(), context.getClass()];
 		const permissions =

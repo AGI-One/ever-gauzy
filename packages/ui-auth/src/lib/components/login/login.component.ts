@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroupDirective } from '@angular/forms';
 import { NbAuthService, NbLoginComponent, NB_AUTH_OPTIONS } from '@nebular/auth';
+import { NbToastrService } from '@nebular/theme';
 import { CookieService } from 'ngx-cookie-service';
 import { RolesEnum } from '@gauzy/contracts';
 import { environment } from '@gauzy/ui-config';
@@ -9,10 +10,10 @@ import { ElectronService } from '@gauzy/ui-core/core';
 import { patterns } from '@gauzy/ui-core/shared';
 
 @Component({
-    selector: 'ngx-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+	selector: 'ngx-login',
+	templateUrl: './login.component.html',
+	styleUrls: ['./login.component.scss'],
+	standalone: false
 })
 export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 	@ViewChild('form') private readonly form: FormGroupDirective;
@@ -25,6 +26,8 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 
 	constructor(
 		private readonly cookieService: CookieService,
+		private readonly toastrService: NbToastrService,
+		private readonly route: ActivatedRoute,
 		public readonly nbAuthService: NbAuthService,
 		public readonly cdr: ChangeDetectorRef,
 		public readonly router: Router,
@@ -41,6 +44,37 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 		body.removeAttribute('style');
 		this.checkRememberdMe();
 		this.autoFillCredential();
+		this.checkAuthError();
+	}
+
+	/**
+	 * Check for OAuth error in query params and show toast
+	 */
+	checkAuthError() {
+		this.route.queryParams.subscribe((params) => {
+			let errorMessage: string = null;
+
+			// Check direct error param
+			if (params.error) {
+				errorMessage = decodeURIComponent(params.error);
+			}
+			// Check error inside returnUrl
+			else if (params.returnUrl) {
+				const returnUrl = params.returnUrl;
+				const errorMatch = returnUrl.match(/[?&]error=([^&]+)/);
+				if (errorMatch) {
+					errorMessage = decodeURIComponent(errorMatch[1]);
+				}
+			}
+
+			if (errorMessage) {
+				this.toastrService.danger(errorMessage, 'Authentication Failed', {
+					duration: 5000
+				});
+				// Remove error param from URL
+				this.router.navigate(['/auth/login'], { replaceUrl: true });
+			}
+		});
 	}
 
 	/**

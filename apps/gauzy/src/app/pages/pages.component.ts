@@ -61,18 +61,23 @@ export class PagesComponent extends TranslationBaseComponent implements AfterVie
 			.pipe(
 				filter(({ user }: Data) => !!user),
 				tap(({ user }: Data) => {
+					// Set the user to component property
+					this.user = user;
+
 					//When a new user registers & logs in for the first time, he/she does not have tenantId.
 					//In this case, we have to redirect the user to the onboarding page to create their first organization, tenant, role.
 					if (!user.tenantId) {
 						this._router.navigate(['/onboarding/tenant']);
 						return;
 					}
+
+					// Create entry point after user is loaded
+					this._createEntryPoint();
 				}),
 				// Handle component lifecycle to avoid memory leaks
 				untilDestroyed(this)
 			)
 			.subscribe();
-		await this._createEntryPoint();
 
 		this._store.selectedOrganization$
 			.pipe(
@@ -379,9 +384,12 @@ export class PagesComponent extends TranslationBaseComponent implements AfterVie
 
 		if (!id) return;
 
-		const relations = ['role', 'tenant', 'tenant.featureOrganizations', 'tenant.featureOrganizations.feature'];
-		this.user = await this._usersService.getMe(relations, true);
+		// Ensure user is loaded
+		if (!this.user) {
+			return;
+		}
 
+		const relations = ['role', 'tenant', 'tenant.featureOrganizations', 'tenant.featureOrganizations.feature'];
 		this._authStrategy.electronAuthentication({
 			user: this.user,
 			token: this._store.token
@@ -401,7 +409,9 @@ export class PagesComponent extends TranslationBaseComponent implements AfterVie
 
 		//tenant enabled/disabled features for relatives organizations
 		const { tenant } = this.user;
-		this._store.featureTenant = tenant.featureOrganizations.filter((item) => !item.organizationId);
+		if (tenant && tenant.featureOrganizations) {
+			this._store.featureTenant = tenant.featureOrganizations.filter((item) => !item.organizationId);
+		}
 	}
 
 	ngOnDestroy() {

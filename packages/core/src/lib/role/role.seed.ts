@@ -5,12 +5,18 @@
 import { DataSource } from 'typeorm';
 import { Role } from './role.entity';
 import { IRole, ITenant, RolesEnum, SYSTEM_DEFAULT_ROLES } from '@gauzy/contracts';
+import { DEFAULT_EVER_TENANT } from '../tenant/default-tenants';
 
 export const createRoles = async (dataSource: DataSource, tenants: ITenant[]): Promise<IRole[]> => {
 	try {
 		const roles: IRole[] = [];
 		for (const tenant of tenants) {
 			for (const name of Object.values(RolesEnum)) {
+				// Only create PLATFORM_ADMIN role for 'Ever' tenant
+				if (name === RolesEnum.PLATFORM_ADMIN && tenant.name !== DEFAULT_EVER_TENANT) {
+					continue;
+				}
+
 				const role = new Role();
 				role.name = name;
 				role.tenant = tenant;

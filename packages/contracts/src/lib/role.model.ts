@@ -16,6 +16,7 @@ export interface IRoleFindInput extends IBasePerTenantEntityModel {
 }
 
 export enum RolesEnum {
+	PLATFORM_ADMIN = 'PLATFORM_ADMIN',
 	SUPER_ADMIN = 'SUPER_ADMIN',
 	ADMIN = 'ADMIN',
 	DATA_ENTRY = 'DATA_ENTRY',
@@ -39,6 +40,7 @@ export interface IRelationalRole {
 
 /** Default system role */
 export const SYSTEM_DEFAULT_ROLES = [
+	RolesEnum.PLATFORM_ADMIN, // Platform admin role
 	RolesEnum.SUPER_ADMIN,
 	RolesEnum.ADMIN,
 	RolesEnum.EMPLOYEE,

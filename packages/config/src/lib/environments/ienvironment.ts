@@ -51,6 +51,11 @@ export interface IDemoCredential {
 	readonly employeePassword?: string;
 }
 
+export interface IPlatformAdminCredential {
+	readonly email?: string;
+	readonly password?: string;
+}
+
 /**
  * Server Environment
  */
@@ -155,6 +160,7 @@ export interface IEnvironment {
 
 	demo: boolean;
 	demoCredentialConfig?: IDemoCredential;
+	platformAdmin?: IPlatformAdminCredential;
 
 	/**
 	 * Email Reset

@@ -143,6 +143,9 @@ if (!isDocker) {
 		DEMO_SUPER_ADMIN_EMAIL: '${env.DEMO_SUPER_ADMIN_EMAIL}',
 		DEMO_SUPER_ADMIN_PASSWORD: '${env.DEMO_SUPER_ADMIN_PASSWORD}',
 
+		PLATFORM_ADMIN_EMAIL: '${env.PLATFORM_ADMIN_EMAIL}',
+		PLATFORM_ADMIN_PASSWORD: '${env.PLATFORM_ADMIN_PASSWORD}',
+
 		DEMO_ADMIN_EMAIL: '${env.DEMO_ADMIN_EMAIL}',
 		DEMO_ADMIN_PASSWORD: '${env.DEMO_ADMIN_PASSWORD}',
 
@@ -297,6 +300,9 @@ if (!isDocker) {
 		DEMO_SUPER_ADMIN_EMAIL: '${env.DEMO_SUPER_ADMIN_EMAIL}',
 		DEMO_SUPER_ADMIN_PASSWORD: '${env.DEMO_SUPER_ADMIN_PASSWORD}',
 
+		PLATFORM_ADMIN_EMAIL: '${env.PLATFORM_ADMIN_EMAIL}',
+		PLATFORM_ADMIN_PASSWORD: '${env.PLATFORM_ADMIN_PASSWORD}',
+
 		DEMO_ADMIN_EMAIL: '${env.DEMO_ADMIN_EMAIL}',
 		DEMO_ADMIN_PASSWORD: '${env.DEMO_ADMIN_PASSWORD}',
 
@@ -377,10 +383,10 @@ if (!isProd) {
 // we always want first to remove old generated files (one of them is not needed for current build)
 try {
 	unlinkSync(`./packages/ui-config/src/lib/environments/environment.ts`);
-} catch {}
+} catch { }
 try {
 	unlinkSync(`./packages/ui-config/src/lib/environments/environment.prod.ts`);
-} catch {}
+} catch { }
 
 const envFileDest: string = isProd ? 'environment.prod.ts' : 'environment.ts';
 const envFileDestOther: string = !isProd ? 'environment.prod.ts' : 'environment.ts';
