@@ -60,16 +60,20 @@
 				"buildTarget": "api:build",
 				"inspect": true,
 				"port": 9229,
-				"watch": false
+				"watch": true
 			},
 			"configurations": {
 				"development": {
 					"buildTarget": "api:build:development",
-					"watch": false
+					"watch": true
 				},
 				"production": {
 					"buildTarget": "api:build:production",
 					"watch": false
+				},
+				"dev": {
+					"buildTarget": "api:build:development",
+					"watch": true
 				}
 			}
 		},
