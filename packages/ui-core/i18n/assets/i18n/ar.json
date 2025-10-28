@@ -3374,7 +3374,8 @@
 		"ROLES_PERMISSIONS": "الأدوار والصلاحيات",
 		"TIME_TRACKING": "تتتبع الوقت",
 		"ESTIMATE": "تقدير",
-		"DASHBOARD": "لوحة القيادة"
+		"DASHBOARD": "لوحة القيادة",
+		"PLATFORM_ADMINISTRATION": "إدارة المنصة"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3472,6 +3473,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "اذهب إلى لوحة التحكم ، إدارة إحصاءات الموظفين ، لوحة تتبع الوقت"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "إدارة على مستوى المنصة لإدارة المستأجرين العملاء"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

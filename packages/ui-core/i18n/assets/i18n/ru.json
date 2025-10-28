@@ -3411,7 +3411,8 @@
 		"ROLES_PERMISSIONS": "Роли и Разрешения",
 		"TIME_TRACKING": "Время отслеживания",
 		"ESTIMATE": "Оценить",
-		"DASHBOARD": "Приборная доска"
+		"DASHBOARD": "Приборная доска",
+		"PLATFORM_ADMINISTRATION": "Администрирование платформы"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3509,6 +3510,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Перейти к панели инструментов, управлять статистикой сотрудников, отслеживать время"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Администрирование на уровне платформы для управления клиентскими арендаторами"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

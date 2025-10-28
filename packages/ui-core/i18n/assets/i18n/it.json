@@ -3389,7 +3389,8 @@
 		"ROLES_PERMISSIONS": "Ruoli e autorizzazioni",
 		"TIME_TRACKING": "Registrare il tempo",
 		"ESTIMATE": "Stima",
-		"DASHBOARD": "Dashboard"
+		"DASHBOARD": "Dashboard",
+		"PLATFORM_ADMINISTRATION": "Amministrazione della piattaforma"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3487,6 +3488,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Vai alla dashboard, Gestisci le statistiche degli dipendenti, Dashboard di tracciamento del tempo"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Amministrazione a livello di piattaforma per la gestione degli inquilini dei clienti"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

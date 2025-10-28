@@ -3385,7 +3385,8 @@
 		"ROLES_PERMISSIONS": "Rollen & Berechtigungen",
 		"TIME_TRACKING": "Zeiterfassung",
 		"ESTIMATE": "Kostenvoranschlag",
-		"DASHBOARD": "Dashboard"
+		"DASHBOARD": "Dashboard",
+		"PLATFORM_ADMINISTRATION": "Plattformverwaltung"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3483,6 +3484,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Gehe zum Dashboard, verwalte Mitarbeiterstatistiken, Zeiterfassungs-Dashboard"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Verwaltung auf Plattformebene zur Verwaltung von Kundenmandanten"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

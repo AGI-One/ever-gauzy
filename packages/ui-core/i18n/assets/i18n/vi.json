@@ -3518,7 +3518,8 @@
 		"ROLES_PERMISSIONS": "Vai trò & Quyền hạn",
 		"TIME_TRACKING": "Theo dõi thời gian",
 		"ESTIMATE": "Báo giá",
-		"DASHBOARD": "Bảng điều khiển"
+		"DASHBOARD": "Bảng điều khiển",
+		"PLATFORM_ADMINISTRATION": "Quản trị nền tảng"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3616,6 +3617,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Go to dashboard, Manage Employee Statistics, Time Tracking Dashboard"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "Quản trị cấp nền tảng để quản lý các tenant khách hàng"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {

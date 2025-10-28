@@ -3405,7 +3405,8 @@
 		"ROLES_PERMISSIONS": "Roles & Permissions",
 		"TIME_TRACKING": "Time Tracking",
 		"ESTIMATE": "Estimate",
-		"DASHBOARD": "לוח מחוונים"
+		"DASHBOARD": "לוח מחוונים",
+		"PLATFORM_ADMINISTRATION": "ניהול פלטפורמה"
 	},
 	"SETTINGS_FEATURES_DESCRIPTION": {
 		"INVOICE": {
@@ -3503,6 +3504,9 @@
 		},
 		"DASHBOARD": {
 			"GO_TO_DASHBOARD_MANAGE_EMPLOYEE_STATISTICS_TIME_TRACKING_DASHBOARD": "Go to dashboard, Manage Employee Statistics, Time Tracking Dashboard"
+		},
+		"PLATFORM_ADMINISTRATION": {
+			"PLATFORM-LEVEL_ADMINISTRATION_FOR_MANAGING_CUSTOMER_TENANTS": "ניהול ברמת הפלטפורמה לניהול דיירי לקוחות"
 		}
 	},
 	"SETTINGS_FEATURES_TEXT": {
