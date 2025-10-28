@@ -16,7 +16,7 @@ export interface IRoleFindInput extends IBasePerTenantEntityModel {
 }
 
 export enum RolesEnum {
-	PLATFORM_ADMIN = 'PLATFORM_ADMIN', // Platform-level admin (no tenant)
+	PLATFORM_ADMIN = 'PLATFORM_ADMIN',
 	SUPER_ADMIN = 'SUPER_ADMIN',
 	ADMIN = 'ADMIN',
 	DATA_ENTRY = 'DATA_ENTRY',
