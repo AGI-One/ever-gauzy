@@ -9,7 +9,7 @@ import { IIncomingRequest, RequestCtx } from './../request-context.decorator';
 @Public()
 @Controller('/auth')
 export class Auth0Controller {
-	constructor(public readonly service: SocialAuthService) {}
+	constructor(public readonly service: SocialAuthService) { }
 
 	/**
 	 * Handles the initial Auth0 login request.
@@ -17,7 +17,7 @@ export class Auth0Controller {
 	 * @param req - The incoming request object, typically used to access request data or user information.
 	 */
 	@Get('/auth0')
-	auth0Login(@Req() _: Request) {}
+	auth0Login(@Req() _: Request) { }
 
 	/**
 	 * Handles the callback from Auth0 after a successful login.
@@ -30,6 +30,9 @@ export class Auth0Controller {
 	async auth0LoginCallback(@RequestCtx() context: IIncomingRequest, @Res() res: Response): Promise<any> {
 		const { user } = context;
 		const { success, authData } = await this.service.validateOAuthLoginEmail(user.emails);
-		return this.service.routeRedirect(success, authData, res);
+
+		// Redirect to success or failed page based on the result
+		const errorMessage = !success ? 'Account does not exist. Please contact your administrator.' : undefined;
+		return this.service.routeRedirect(success, authData, res, errorMessage);
 	}
 }

@@ -11,7 +11,7 @@ import { IIncomingRequest, RequestCtx } from './../request-context.decorator';
 @Public()
 @Controller('/auth')
 export class GithubController {
-	constructor(public readonly service: SocialAuthService) {}
+	constructor(public readonly service: SocialAuthService) { }
 
 	/**
 	 * Initiates GitHub login.
@@ -38,6 +38,9 @@ export class GithubController {
 		// To-DO: Determine the frontend URL based on the request
 
 		const { success, authData } = await this.service.validateOAuthLoginEmail(user.emails);
-		return this.service.routeRedirect(success, authData, _res);
+
+		// Redirect to success or failed page based on the result
+		const errorMessage = !success ? 'Account does not exist. Please contact your administrator.' : undefined;
+		return this.service.routeRedirect(success, authData, _res, errorMessage);
 	}
 }

@@ -28,7 +28,7 @@ export class SocialAuthService extends BaseSocialAuth {
 		this.clientBaseUrl = this.configService.get('clientBaseUrl') as Extract<keyof IEnvironment, string>;
 	}
 
-	public validateOAuthLoginEmail(args: []): any {}
+	public validateOAuthLoginEmail(args: []): any { }
 
 	/**
 	 * Generate a hash for the provided password.
@@ -52,14 +52,28 @@ export class SocialAuthService extends BaseSocialAuth {
 	 * @param success - Indicates whether the operation was successful.
 	 * @param auth - Object containing JWT and userId.
 	 * @param res - Express response object.
+	 * @param errorMessage - Optional error message to pass to the failed page.
 	 * @returns The redirect response.
 	 */
-	async routeRedirect(success: boolean, auth: { jwt: string; userId: string }, res: any) {
-		const { userId, jwt } = auth;
+	async routeRedirect(
+		success: boolean,
+		auth: { jwt: string; userId: string },
+		res: any,
+		errorMessage?: string
+	) {
+		let redirectPath: string;
 
-		const redirectPath = success ? `#/sign-in/success?jwt=${jwt}&userId=${userId}` : `#/auth/register`;
+		if (success) {
+			// OAuth login was successful, redirect to success page
+			const { userId, jwt } = auth;
+			redirectPath = `#/sign-in/success?jwt=${jwt}&userId=${userId}`;
+		} else {
+			// OAuth login failed, redirect to login page with error message
+			const encodedError = errorMessage ? encodeURIComponent(errorMessage) : '';
+			redirectPath = `#/auth/login${encodedError ? `?error=${encodedError}` : ''}`;
+		}
+
 		const redirectUrl = `${this.clientBaseUrl}/${redirectPath}`;
-
 		return res.redirect(redirectUrl);
 	}
 }

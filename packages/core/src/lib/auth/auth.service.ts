@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import { JsonWebTokenError, JwtPayload, sign, verify } from 'jsonwebtoken';
 import { pick } from 'underscore';
 import { IAppIntegrationConfig } from '@gauzy/common';
-import { environment } from '@gauzy/config';
+import { environment, gauzyToggleFeatures } from '@gauzy/config';
 import { DEMO_PASSWORD_LESS_MAGIC_CODE } from '@gauzy/constants';
 import {
 	IUserRegistrationInput,
@@ -40,7 +40,8 @@ import {
 	ISocialAccount,
 	ILastTeam,
 	ILastOrganization,
-	ID
+	ID,
+	FeatureEnum
 } from '@gauzy/contracts';
 import { SocialAuthService } from '@gauzy/auth';
 import { buildQueryString, deepMerge, generateAlphaNumericCode, isNotEmpty } from '@gauzy/utils';
@@ -838,6 +839,9 @@ export class AuthService extends SocialAuthService {
 					return response;
 				}
 			}
+
+			// If no user exists, return success: false
+			// Controllers will handle the redirect to failed page
 			return response;
 		} catch (err) {
 			throw new InternalServerErrorException('validateOAuthLoginEmail', err.message);
@@ -1416,10 +1420,10 @@ export class AuthService extends SocialAuthService {
 			lastLoginAt: user.lastLoginAt || null, // Sets last logout timestamp to null if it's undefined
 			tenant: user.tenant
 				? new Tenant({
-						id: user.tenant.id, // Assuming tenantId is a direct property of tenant
-						name: user.tenant.name || '', // Defaulting to an empty string if name is undefined
-						logo: user.tenant.logo || '' // Defaulting to an empty string if logo is undefined
-				  })
+					id: user.tenant.id, // Assuming tenantId is a direct property of tenant
+					name: user.tenant.name || '', // Defaulting to an empty string if name is undefined
+					logo: user.tenant.logo || '' // Defaulting to an empty string if logo is undefined
+				})
 				: null // Sets tenant to null if user.tenant is undefined
 		});
 	}

@@ -11,7 +11,7 @@ import { IIncomingRequest, RequestCtx } from './../request-context.decorator';
 @Public()
 @Controller('/auth')
 export class FacebookController {
-	constructor(public readonly service: SocialAuthService) {}
+	constructor(public readonly service: SocialAuthService) { }
 
 	/**
 	 * Initiates Facebook login.
@@ -19,7 +19,7 @@ export class FacebookController {
 	 * @param req
 	 */
 	@Get('/facebook')
-	facebookLogin(@Req() _: Request) {}
+	facebookLogin(@Req() _: Request) { }
 
 	/**
 	 * Facebook login callback endpoint.
@@ -32,6 +32,9 @@ export class FacebookController {
 	async facebookLoginCallback(@RequestCtx() context: IIncomingRequest, @Res() res: Response): Promise<any> {
 		const { user } = context;
 		const { success, authData } = await this.service.validateOAuthLoginEmail(user.emails);
-		return this.service.routeRedirect(success, authData, res);
+
+		// Redirect to success or failed page based on the result
+		const errorMessage = !success ? 'Account does not exist. Please contact your administrator.' : undefined;
+		return this.service.routeRedirect(success, authData, res, errorMessage);
 	}
 }

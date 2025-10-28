@@ -11,7 +11,7 @@ import { IIncomingRequest, RequestCtx } from './../request-context.decorator';
 @Public()
 @Controller('/auth')
 export class LinkedinController {
-	constructor(public readonly service: SocialAuthService) {}
+	constructor(public readonly service: SocialAuthService) { }
 
 	/**
 	 * Initiates LinkedIn login.
@@ -19,7 +19,7 @@ export class LinkedinController {
 	 * @param req
 	 */
 	@Get('/linkedin')
-	linkedinLogin(@Req() _: Request) {}
+	linkedinLogin(@Req() _: Request) { }
 
 	/**
 	 * LinkedIn login callback endpoint.
@@ -33,6 +33,8 @@ export class LinkedinController {
 		const { user } = context;
 		const { success, authData } = await this.service.validateOAuthLoginEmail(user.emails);
 
-		return this.service.routeRedirect(success, authData, res);
+		// Redirect to success or failed page based on the result
+		const errorMessage = !success ? 'Account does not exist. Please contact your administrator.' : undefined;
+		return this.service.routeRedirect(success, authData, res, errorMessage);
 	}
 }
