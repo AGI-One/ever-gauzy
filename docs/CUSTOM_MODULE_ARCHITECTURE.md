@@ -1010,6 +1010,612 @@ ON plugin_installation(tenant_id, organization_id, status);
 
 ---
 
+## 🎨 Building Plugins with Frontend & Backend
+
+> **Complete guide for creating full-stack custom plugins with UI components**
+
+### 📦 Project Structure
+
+```
+ever-gauzy/
+├── packages/
+│   └── plugins/
+│       ├── customer-a/                    # ✅ Backend Plugin
+│       │   ├── package.json
+│       │   ├── project.json
+│       │   ├── tsconfig.json
+│       │   └── src/
+│       │       ├── index.ts               # Export plugin
+│       │       └── lib/
+│       │           ├── customer-a.plugin.ts   # Plugin config
+│       │           ├── customer-a.module.ts   # NestJS module
+│       │           ├── controllers/
+│       │           ├── services/
+│       │           ├── entities/
+│       │           └── permissions/
+│       │
+│       └── customer-a-ui/                 # ✅ Frontend Plugin
+│           ├── package.json
+│           ├── project.json
+│           ├── ng-package.json            # Angular library config
+│           ├── tsconfig.json
+│           └── src/
+│               ├── index.ts               # Public API
+│               └── lib/
+│                   ├── customer-a-ui.module.ts    # Angular module
+│                   ├── customer-a.routes.ts       # Routing
+│                   ├── customer-a.layout.component.ts
+│                   └── components/
+│
+└── apps/
+    ├── api/
+    │   └── src/
+    │       └── plugins.ts                 # ✅ Register BE plugin
+    │
+    └── gauzy/
+        └── src/
+            └── app/
+                └── pages/
+                    └── integrations/
+                        └── integrations.module.ts  # ✅ Register FE plugin
+```
+
+### 🔧 Backend Plugin Implementation
+
+#### 1. Backend Package Configuration
+
+```json
+// packages/plugins/customer-a/package.json
+{
+  "name": "@gauzy/plugin-customer-a",
+  "version": "0.1.0",
+  "description": "Customer A custom plugin - Backend",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "@gauzy/config": "^0.1.0",
+    "@gauzy/contracts": "^0.1.0",
+    "@gauzy/core": "^0.1.0",
+    "@gauzy/plugin": "^0.1.0",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "typeorm": "^0.3.24",
+    "rxjs": "^7.8.2"
+  }
+}
+```
+
+#### 2. Plugin Entry Point
+
+```typescript
+// packages/plugins/customer-a/src/lib/customer-a.plugin.ts
+import * as chalk from 'chalk';
+import { ApplicationPluginConfig } from '@gauzy/common';
+import {
+    GauzyCorePlugin as Plugin,
+    IOnPluginBootstrap,
+    IOnPluginDestroy
+} from '@gauzy/plugin';
+import { CustomerAModule } from './customer-a.module';
+import { Inventory } from './entities/inventory.entity';
+
+@Plugin({
+    // Import NestJS module
+    imports: [CustomerAModule],
+
+    // Register entities for TypeORM
+    entities: [Inventory],
+
+    // Custom configuration (optional)
+    configuration: (config: ApplicationPluginConfig) => {
+        // Can add custom fields to existing entities
+        // Example: Add relation to Organization entity
+        config.customFields.Organization.push({
+            name: 'inventorySettings',
+            type: 'json',
+            nullable: true
+        });
+
+        return config;
+    }
+})
+export class CustomerAPlugin implements IOnPluginBootstrap, IOnPluginDestroy {
+
+    async onPluginBootstrap(): Promise<void> {
+        console.log(chalk.green('🚀 Customer A Plugin bootstrapped'));
+
+        // Register custom permissions
+        await this.registerCustomPermissions();
+    }
+
+    async onPluginDestroy(): Promise<void> {
+        console.log(chalk.red('🛑 Customer A Plugin destroyed'));
+    }
+
+    private async registerCustomPermissions(): Promise<void> {
+        // Auto-register permissions for enabled tenants
+        // Will be used with @Permissions() decorator
+    }
+}
+```
+
+#### 3. NestJS Module
+
+```typescript
+// packages/plugins/customer-a/src/lib/customer-a.module.ts
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { RouterModule } from 'nest-router';
+import { Inventory } from './entities/inventory.entity';
+import { InventoryController } from './controllers/inventory.controller';
+import { InventoryService } from './services/inventory.service';
+
+@Module({
+    imports: [
+        // Define base API path
+        RouterModule.forRoutes([
+            {
+                path: '/customer-a',  // Base: /api/customer-a
+                module: CustomerAModule
+            }
+        ]),
+        // Register TypeORM entities
+        TypeOrmModule.forFeature([Inventory]),
+        // CQRS (optional)
+        CqrsModule
+    ],
+    controllers: [InventoryController],
+    providers: [InventoryService],
+    exports: [InventoryService]
+})
+export class CustomerAModule {}
+```
+
+#### 4. Controller with Permissions
+
+```typescript
+// packages/plugins/customer-a/src/lib/controllers/inventory.controller.ts
+import {
+    Controller, Get, Post, Put, Delete,
+    Body, Param, UseGuards
+} from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+    TenantPermissionGuard,
+    PermissionGuard,
+    Permissions,
+    UUIDValidationPipe
+} from '@gauzy/core';
+
+const INVENTORY_PERMISSIONS = {
+    VIEW: 'CUSTOMER_A_INVENTORY_VIEW',
+    CREATE: 'CUSTOMER_A_INVENTORY_CREATE',
+    EDIT: 'CUSTOMER_A_INVENTORY_EDIT',
+    DELETE: 'CUSTOMER_A_INVENTORY_DELETE'
+};
+
+@ApiTags('Customer A - Inventory')
+@ApiBearerAuth()
+@UseGuards(TenantPermissionGuard, PermissionGuard)
+@Controller('inventory')  // Path: /api/customer-a/inventory
+export class InventoryController {
+
+    constructor(private readonly service: InventoryService) {}
+
+    @Get()
+    @Permissions(INVENTORY_PERMISSIONS.VIEW)
+    async findAll() {
+        return await this.service.findAll();
+    }
+
+    @Post()
+    @Permissions(INVENTORY_PERMISSIONS.CREATE)
+    async create(@Body() input: CreateInventoryDTO) {
+        return await this.service.create(input);
+    }
+
+    @Put(':id')
+    @Permissions(INVENTORY_PERMISSIONS.EDIT)
+    async update(
+        @Param('id', UUIDValidationPipe) id: string,
+        @Body() input: UpdateInventoryDTO
+    ) {
+        return await this.service.update(id, input);
+    }
+
+    @Delete(':id')
+    @Permissions(INVENTORY_PERMISSIONS.DELETE)
+    async delete(@Param('id', UUIDValidationPipe) id: string) {
+        return await this.service.delete(id);
+    }
+}
+```
+
+#### 5. Export Backend Plugin
+
+```typescript
+// packages/plugins/customer-a/src/index.ts
+export * from './lib/customer-a.plugin';
+```
+
+---
+
+### 🎨 Frontend Plugin Implementation
+
+#### 1. Frontend Package Configuration
+
+```json
+// packages/plugins/customer-a-ui/package.json
+{
+  "name": "@gauzy/plugin-customer-a-ui",
+  "version": "0.1.0",
+  "description": "Customer A custom plugin - Frontend",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/core": "^19.2.0"
+  },
+  "dependencies": {
+    "@angular/forms": "^19.2.10",
+    "@angular/router": "^19.2.10",
+    "@gauzy/contracts": "^0.1.0",
+    "@gauzy/ui-core": "^0.1.0",
+    "@nebular/theme": "^15.0.0",
+    "@ngx-translate/core": "^16.0.4",
+    "ngx-permissions": "^19.0.0",
+    "rxjs": "^7.8.2"
+  }
+}
+```
+
+#### 2. Angular Module
+
+```typescript
+// packages/plugins/customer-a-ui/src/lib/customer-a-ui.module.ts
+import { NgModule } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbIconModule,
+    NbInputModule,
+    NbSelectModule,
+    NbSpinnerModule
+} from '@nebular/theme';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { HttpLoaderFactory } from '@gauzy/ui-core/i18n';
+import { SharedModule, getBrowserLanguage } from '@gauzy/ui-core/shared';
+import { CustomerARoutes } from './customer-a.routes';
+import { CustomerALayoutComponent } from './customer-a.layout.component';
+import { InventoryListComponent } from './components/inventory-list/inventory-list.component';
+import { InventoryFormComponent } from './components/inventory-form/inventory-form.component';
+
+@NgModule({
+    declarations: [
+        CustomerALayoutComponent,
+        InventoryListComponent,
+        InventoryFormComponent
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        // Nebular UI modules
+        NbButtonModule,
+        NbCardModule,
+        NbIconModule,
+        NbInputModule,
+        NbSelectModule,
+        NbSpinnerModule,
+        // Permissions
+        NgxPermissionsModule.forRoot(),
+        // i18n Translation
+        TranslateModule.forRoot({
+            defaultLanguage: getBrowserLanguage(),
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        // Routes
+        CustomerARoutes,
+        // Shared modules from base platform
+        SharedModule
+    ]
+})
+export class CustomerAUiModule {}
+```
+
+#### 3. Routing Configuration
+
+```typescript
+// packages/plugins/customer-a-ui/src/lib/customer-a.routes.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { PermissionsGuard } from '@gauzy/ui-core/core';
+import { CustomerALayoutComponent } from './customer-a.layout.component';
+import { InventoryListComponent } from './components/inventory-list/inventory-list.component';
+import { InventoryFormComponent } from './components/inventory-form/inventory-form.component';
+
+const routes: Routes = [
+    {
+        path: '',
+        component: CustomerALayoutComponent,
+        canActivate: [PermissionsGuard],
+        data: {
+            permissions: {
+                only: ['CUSTOMER_A_INVENTORY_VIEW'],
+                redirectTo: '/pages/dashboard'
+            }
+        },
+        children: [
+            {
+                path: '',
+                component: InventoryListComponent
+            },
+            {
+                path: 'create',
+                component: InventoryFormComponent,
+                data: {
+                    permissions: {
+                        only: ['CUSTOMER_A_INVENTORY_CREATE']
+                    }
+                }
+            },
+            {
+                path: 'edit/:id',
+                component: InventoryFormComponent,
+                data: {
+                    permissions: {
+                        only: ['CUSTOMER_A_INVENTORY_EDIT']
+                    }
+                }
+            }
+        ]
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class CustomerARoutes {}
+```
+
+#### 4. Layout Component
+
+```typescript
+// packages/plugins/customer-a-ui/src/lib/customer-a.layout.component.ts
+import { Component, OnInit } from '@angular/core';
+import { NbRouteTab } from '@nebular/theme';
+import { TranslateService } from '@ngx-translate/core';
+
+@Component({
+    selector: 'ga-customer-a-layout',
+    template: `
+        <nb-card>
+            <nb-card-header>
+                <nb-route-tabset [tabs]="tabs" fullWidth></nb-route-tabset>
+            </nb-card-header>
+            <nb-card-body>
+                <router-outlet></router-outlet>
+            </nb-card-body>
+        </nb-card>
+    `
+})
+export class CustomerALayoutComponent implements OnInit {
+    tabs: NbRouteTab[] = [];
+
+    constructor(private readonly translateService: TranslateService) {}
+
+    ngOnInit() {
+        this.tabs = [
+            {
+                title: this.getTranslation('CUSTOMER_A.INVENTORY.TITLE'),
+                route: '/pages/customer-a',
+                responsive: true
+            }
+        ];
+    }
+
+    private getTranslation(key: string): string {
+        return this.translateService.instant(key);
+    }
+}
+```
+
+#### 5. Export Frontend Plugin
+
+```typescript
+// packages/plugins/customer-a-ui/src/index.ts
+export * from './lib/customer-a-ui.module';
+```
+
+---
+
+### 🔗 Plugin Registration
+
+#### Backend Registration
+
+```typescript
+// apps/api/src/plugins.ts
+import { CustomerAPlugin } from '@gauzy/plugin-customer-a';
+import { IntegrationGithubPlugin } from '@gauzy/plugin-integration-github';
+// ... other plugins
+
+export const plugins = [
+    // ... existing plugins
+    IntegrationGithubPlugin,
+
+    // ✅ Add your custom plugin here
+    CustomerAPlugin,
+];
+```
+
+#### Frontend Registration (Lazy Loading)
+
+```typescript
+// apps/gauzy/src/app/pages/integrations/integrations.module.ts
+constructor(
+    @Inject(PageRouteRegistryService)
+    readonly _pageRouteRegistryService: PageRouteRegistryService
+) {
+    this.registerPageRoutes();
+}
+
+registerPageRoutes(): void {
+    // ... existing registrations
+
+    // ✅ Register Customer A plugin route
+    this._pageRouteRegistryService.registerPageRoute({
+        location: 'integrations',  // Or custom location
+        path: 'customer-a',
+        data: { selectors: false },
+        loadChildren: () =>
+            import('@gauzy/plugin-customer-a-ui')
+                .then((m) => m.CustomerAUiModule)
+    });
+}
+```
+
+---
+
+### 📝 Build Configuration
+
+#### Backend Project Config
+
+```json
+// packages/plugins/customer-a/project.json
+{
+  "name": "plugin-customer-a",
+  "sourceRoot": "packages/plugins/customer-a/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/packages/plugins/customer-a",
+        "main": "packages/plugins/customer-a/src/index.ts",
+        "tsConfig": "packages/plugins/customer-a/tsconfig.lib.json",
+        "assets": []
+      }
+    }
+  }
+}
+```
+
+#### Frontend Project Config
+
+```json
+// packages/plugins/customer-a-ui/project.json
+{
+  "name": "plugin-customer-a-ui",
+  "sourceRoot": "packages/plugins/customer-a-ui/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "project": "packages/plugins/customer-a-ui/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/plugins/customer-a-ui/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/plugins/customer-a-ui/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    }
+  }
+}
+```
+
+---
+
+### ⚡ Build & Run Commands
+
+```bash
+# Build backend plugin
+yarn nx build plugin-customer-a
+
+# Build frontend plugin
+yarn nx build plugin-customer-a-ui
+
+# Build both plugins
+yarn nx build plugin-customer-a && yarn nx build plugin-customer-a-ui
+
+# Watch mode for development
+yarn nx build plugin-customer-a --watch
+yarn nx build plugin-customer-a-ui --watch
+
+# Run API (backend loads plugin automatically)
+yarn start:api
+
+# Run Web App (frontend lazy loads when navigating)
+yarn start:web
+```
+
+---
+
+### 🎯 Key Architecture Decisions
+
+| Aspect | Backend | Frontend |
+|--------|---------|----------|
+| **Framework** | NestJS | Angular |
+| **Entry Point** | `*.plugin.ts` with `@Plugin()` | `*.module.ts` with `@NgModule()` |
+| **Registration** | `apps/api/src/plugins.ts` | `PageRouteRegistryService` |
+| **Loading** | Eager (on app start) | Lazy (on navigation) |
+| **Permissions** | `@Permissions()` decorator | `PermissionsGuard` in routes |
+| **Routing** | `RouterModule.forRoutes()` | `RouterModule.forChild()` |
+| **Build Output** | `dist/packages/plugins/xxx` | `dist/packages/plugins/xxx-ui` |
+| **Package Name** | `@gauzy/plugin-xxx` | `@gauzy/plugin-xxx-ui` |
+
+---
+
+### 💡 Best Practices
+
+#### 1. Naming Conventions
+- **Backend:** `@gauzy/plugin-customer-a`
+- **Frontend:** `@gauzy/plugin-customer-a-ui`
+- **Consistent naming** across packages
+
+#### 2. Separation of Concerns
+- Backend and Frontend are **separate packages**
+- Share only contracts via `@gauzy/contracts`
+- No direct dependencies between FE and BE plugins
+
+#### 3. Lazy Loading (Frontend)
+- **Always use** `loadChildren` for route registration
+- Never import plugin modules directly into `AppModule`
+- Reduces initial bundle size
+
+#### 4. Permission Management
+- Define permissions as **string constants**
+- Prefix with plugin identifier: `CUSTOMER_A_*`
+- Seed into database during plugin bootstrap
+
+#### 5. Translation (i18n)
+- Each plugin has its own translation files
+- Use `TranslateModule.forRoot()` in plugin module
+- Store translations in `assets/i18n/` within plugin
+
+#### 6. Shared Code
+- Extract common utilities to `shared-utilities/`
+- Create base classes for similar plugins
+- Reuse base platform components via `@gauzy/ui-core/shared`
+
+---
+
 ## 🎉 Conclusion
 
 **Recommended: Plugin-Based Architecture**

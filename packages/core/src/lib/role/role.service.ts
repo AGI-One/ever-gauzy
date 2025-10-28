@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { DeleteResult, In, Not } from 'typeorm';
+import { DeleteResult, In, Not, UpdateResult } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { IRole, ITenant, RolesEnum, IRoleMigrateInput, IImportRecord, SYSTEM_DEFAULT_ROLES } from '@gauzy/contracts';
 import { TenantAwareCrudService } from './../core/crud';
+import { IUpdateCriteria } from './../core/crud/icrud.service';
 import { Role } from './role.entity';
 import { RequestContext } from './../core/context';
 import { ImportRecordUpdateOrCreateCommand } from './../export-import/import-record';
@@ -44,11 +46,14 @@ export class RoleService extends TenantAwareCrudService<Role> {
 	/**
 	 * Override update to normalize role name
 	 */
-	async update(id: string | number | Partial<Role>, entity: Partial<Role>): Promise<IRole> {
-		if (entity.name) {
-			entity.name = this.normalizeRoleName(entity.name);
+	async update(
+		id: IUpdateCriteria<Role>,
+		partialEntity: QueryDeepPartialEntity<Role>
+	): Promise<UpdateResult | Role> {
+		if (partialEntity.name) {
+			partialEntity.name = this.normalizeRoleName(partialEntity.name as string);
 		}
-		return await super.update(id, entity);
+		return await super.update(id as string, partialEntity);
 	}
 
 	/**
