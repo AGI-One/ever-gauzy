@@ -66,11 +66,11 @@ rsdb:
 	docker volume rm -f ever-gauzy_cube_data 2>/dev/null || true
 	docker volume rm -f ever-gauzy_jitsu_workspace 2>/dev/null || true
 	docker volume rm -f ever-gauzy_opensearch-data 2>/dev/null || true
-	@echo "🗑️  Cleaning up local data directories..."
-	sudo rm -rf ./.deploy/redis/data 2>/dev/null || true
-	sudo rm -rf ./.deploy/redis/jitsu_users_recognition/data 2>/dev/null || true
-	sudo rm -rf ./.deploy/jitsu/configurator/data/logs 2>/dev/null || true
-	sudo rm -rf ./.deploy/jitsu/server/data/logs 2>/dev/null || true
+	@echo "🗑️  Cleaning up local data directories (keeping .gitkeep)..."
+	find ./.deploy/redis/data -mindepth 1 ! -name '.gitkeep' -delete 2>/dev/null || true
+	find ./.deploy/redis/jitsu_users_recognition/data -mindepth 1 ! -name '.gitkeep' -delete 2>/dev/null || true
+	find ./.deploy/jitsu/configurator/data/logs -mindepth 1 ! -name '.gitkeep' -delete 2>/dev/null || true
+	find ./.deploy/jitsu/server/data/logs -mindepth 1 ! -name '.gitkeep' -delete 2>/dev/null || true
 	@echo "✅ Database volumes and data cleared."
 	make dbup
 	@echo "✅ Databases reset and restarted!"
@@ -119,11 +119,11 @@ win-rsdb:
 	@powershell -Command "docker volume rm -f ever-gauzy_cube_data 2>$$null"
 	@powershell -Command "docker volume rm -f ever-gauzy_jitsu_workspace 2>$$null"
 	@powershell -Command "docker volume rm -f ever-gauzy_opensearch-data 2>$$null"
-	@echo 🗑️  Cleaning up local data directories...
-	@powershell -Command "if (Test-Path '.\.deploy\redis\data') { Remove-Item -Path '.\.deploy\redis\data' -Recurse -Force -ErrorAction SilentlyContinue }"
-	@powershell -Command "if (Test-Path '.\.deploy\redis\jitsu_users_recognition\data') { Remove-Item -Path '.\.deploy\redis\jitsu_users_recognition\data' -Recurse -Force -ErrorAction SilentlyContinue }"
-	@powershell -Command "if (Test-Path '.\.deploy\jitsu\configurator\data\logs') { Remove-Item -Path '.\.deploy\jitsu\configurator\data\logs' -Recurse -Force -ErrorAction SilentlyContinue }"
-	@powershell -Command "if (Test-Path '.\.deploy\jitsu\server\data\logs') { Remove-Item -Path '.\.deploy\jitsu\server\data\logs' -Recurse -Force -ErrorAction SilentlyContinue }"
+	@echo 🗑️  Cleaning up local data directories (keeping .gitkeep)...
+	@powershell -Command "if (Test-Path '.\.deploy\redis\data') { Get-ChildItem -Path '.\.deploy\redis\data' -Recurse | Where-Object { $$_.Name -ne '.gitkeep' } | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\redis\jitsu_users_recognition\data') { Get-ChildItem -Path '.\.deploy\redis\jitsu_users_recognition\data' -Recurse | Where-Object { $$_.Name -ne '.gitkeep' } | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\jitsu\configurator\data\logs') { Get-ChildItem -Path '.\.deploy\jitsu\configurator\data\logs' -Recurse | Where-Object { $$_.Name -ne '.gitkeep' } | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue }"
+	@powershell -Command "if (Test-Path '.\.deploy\jitsu\server\data\logs') { Get-ChildItem -Path '.\.deploy\jitsu\server\data\logs' -Recurse | Where-Object { $$_.Name -ne '.gitkeep' } | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue }"
 	@echo ✅ Database volumes and data cleared.
 	@$(MAKE) win-dbup
 	@echo ✅ Databases reset and restarted!
