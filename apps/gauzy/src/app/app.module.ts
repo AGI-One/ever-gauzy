@@ -49,6 +49,7 @@ import {
 	Store,
 	TenantInterceptor,
 	TokenInterceptor,
+	UnauthorizedInterceptor,
 	WorkspaceSyncService
 } from '@gauzy/ui-core/core';
 import { PostHogModule } from '@gauzy/plugin-posthog-ui';
@@ -117,14 +118,14 @@ const THIRD_PARTY_MODULES = [
 
 	...(environment.POSTHOG_ENABLED && environment.POSTHOG_KEY && environment.POSTHOG_KEY !== 'DOCKER_POSTHOG_KEY'
 		? [
-				PostHogModule.forRoot({
-					apiKey: environment.POSTHOG_KEY,
-					options: {
-						api_host: environment.POSTHOG_HOST,
-						capture_pageview: true
-					}
-				})
-		  ]
+			PostHogModule.forRoot({
+				apiKey: environment.POSTHOG_KEY,
+				options: {
+					api_host: environment.POSTHOG_HOST,
+					capture_pageview: true
+				}
+			})
+		]
 		: [])
 ];
 
@@ -183,6 +184,11 @@ const FEATURE_MODULES = [
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: TenantInterceptor,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: UnauthorizedInterceptor,
 			multi: true
 		},
 		ServerConnectionService,
@@ -301,5 +307,5 @@ export function featureToggleLoaderFactory(provider: FeatureService, store: Stor
 				store.featureToggles = features || [];
 				return features;
 			})
-			.catch(() => {});
+			.catch(() => { });
 }

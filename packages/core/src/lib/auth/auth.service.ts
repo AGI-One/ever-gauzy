@@ -122,7 +122,7 @@ export class AuthService extends SocialAuthService {
 			// Find ALL users by email
 			const users = await this.userService.find({
 				where: { email, isActive: true, isArchived: false, hash: Not(IsNull()) },
-				relations: { role: true },
+				relations: { role: true, tenant: true },
 				order: { updatedAt: 'DESC' } // Order by update time, latest first
 			});
 
@@ -147,6 +147,16 @@ export class AuthService extends SocialAuthService {
 				if (!isPasswordValid) {
 					continue; // Skip this user if password doesn't match
 				}
+
+				// Check if tenant subscription has expired
+				if (user.tenant && user.tenant.expiresAt) {
+					const now = new Date();
+					const isExpired = user.tenant.expiresAt < now;
+					if (isExpired) {
+						throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
+					}
+				}
+
 				// Fetch employee record
 				let employee = null;
 				let isEmployeeValid = true;
@@ -203,6 +213,13 @@ export class AuthService extends SocialAuthService {
 		} catch (error) {
 			// Log the error with a timestamp and the error message for debugging
 			console.error(`Login failed at ${new Date().toISOString()}: ${error.message}.`);
+
+			// Preserve specific error messages (like tenant expiration)
+			if (error instanceof UnauthorizedException && error.message &&
+				error.message.includes('subscription has expired')) {
+				throw error;
+			}
+
 			throw new UnauthorizedException();
 		}
 	}
@@ -818,10 +835,12 @@ export class AuthService extends SocialAuthService {
 	async validateOAuthLoginEmail(emails: Array<{ value: string; verified: boolean }>): Promise<{
 		success: boolean;
 		authData: { jwt: string; userId: string };
+		error?: string;
 	}> {
 		let response = {
 			success: false,
-			authData: { jwt: null, userId: null }
+			authData: { jwt: null, userId: null },
+			error: undefined
 		};
 		try {
 			for (const { value } of emails) {
@@ -832,7 +851,8 @@ export class AuthService extends SocialAuthService {
 
 					response = {
 						success: true,
-						authData: { jwt: token, userId: user.id }
+						authData: { jwt: token, userId: user.id },
+						error: undefined
 					};
 
 					// Break the loop and return the response
@@ -844,6 +864,15 @@ export class AuthService extends SocialAuthService {
 			// Controllers will handle the redirect to failed page
 			return response;
 		} catch (err) {
+			// Check if this is a tenant expiration error
+			if (err instanceof UnauthorizedException && err.message &&
+				err.message.includes('subscription has expired')) {
+				return {
+					success: false,
+					authData: { jwt: null, userId: null },
+					error: err.message
+				};
+			}
 			throw new InternalServerErrorException('validateOAuthLoginEmail', err.message);
 		}
 	}
@@ -1178,8 +1207,17 @@ export class AuthService extends SocialAuthService {
 						isActive: true,
 						isArchived: false
 					},
-					relations: { role: true }
+					relations: { role: true, tenant: true }
 				});
+
+				// Check if tenant subscription has expired
+				if (user.tenant && user.tenant.expiresAt) {
+					const now = new Date();
+					const isExpired = user.tenant.expiresAt < now;
+					if (isExpired) {
+						throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
+					}
+				}
 
 				await this.typeOrmUserRepository.update(
 					{
@@ -1358,6 +1396,15 @@ export class AuthService extends SocialAuthService {
 
 		// Iterate through the users and create workspaces for each user
 		for (const user of users) {
+			// Check if tenant subscription has expired
+			if (user.tenant && user.tenant.expiresAt) {
+				const now = new Date();
+				const isExpired = user.tenant.expiresAt < now;
+				if (isExpired) {
+					continue; // Skip this workspace/tenant if expired
+				}
+			}
+
 			const workspace = await this.createWorkspace(user, code, includeTeams);
 			workspaces.push(workspace);
 		}
@@ -1551,6 +1598,15 @@ export class AuthService extends SocialAuthService {
 
 			if (!targetUser) {
 				throw new UnauthorizedException('User does not have access to this workspace');
+			}
+
+			// Check if tenant subscription has expired
+			if (targetUser.tenant && targetUser.tenant.expiresAt) {
+				const now = new Date();
+				const isExpired = targetUser.tenant.expiresAt < now;
+				if (isExpired) {
+					throw new UnauthorizedException('This workspace subscription has expired. Please renew your subscription to continue.');
+				}
 			}
 
 			// Retrieve the employee details associated with the user

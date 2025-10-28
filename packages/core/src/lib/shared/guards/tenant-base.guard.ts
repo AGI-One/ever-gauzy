@@ -1,7 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { isJSON } from 'class-validator';
-import { RequestMethodEnum } from '@gauzy/contracts';
+import { RequestMethodEnum, RolesEnum } from '@gauzy/contracts';
+import { getRepository } from 'typeorm';
 import { RequestContext } from './../../core/context';
+import { Tenant } from './../../tenant/tenant.entity';
 
 @Injectable()
 export class TenantBaseGuard implements CanActivate {
@@ -15,7 +17,7 @@ export class TenantBaseGuard implements CanActivate {
 
 		// 🌟 PLATFORM ADMIN BYPASS: Platform Admin has access to everything
 		const currentUser = RequestContext.currentUser();
-		if (currentUser && currentUser.role?.name === 'PLATFORM_ADMIN') {
+		if (currentUser && currentUser.role?.name === RolesEnum.SUPER_ADMIN) {
 			console.log('🚀 Platform Admin detected - bypassing tenant base checks');
 			return true;
 		}
@@ -30,6 +32,39 @@ export class TenantBaseGuard implements CanActivate {
 		if (!currentTenantId) {
 			console.log('Guard TenantBase: Unauthorized access blocked. TenantId:', currentTenantId);
 			return isAuthorized;
+		}
+
+		// ✅ CHECK TENANT EXPIRATION
+		try {
+			const tenantRepository = getRepository(Tenant);
+			const tenant = await tenantRepository.findOne({
+				where: { id: currentTenantId },
+				select: ['id', 'expiresAt', 'name']
+			});
+
+			if (!tenant) {
+				console.log('❌ Guard TenantBase: Tenant not found:', currentTenantId);
+				throw new ForbiddenException('Tenant not found');
+			}
+
+			// Check if tenant has expiration date and if it's expired
+			if (tenant.expiresAt) {
+				const now = new Date();
+				const isExpired = tenant.expiresAt < now;
+
+				if (isExpired) {
+					console.log(`❌ Guard TenantBase: Tenant ${currentTenantId} subscription has expired at ${tenant.expiresAt}`);
+					throw new ForbiddenException(
+						'Your organization subscription has expired. Please renew your subscription to continue.'
+					);
+				}
+			}
+		} catch (error) {
+			if (error instanceof ForbiddenException) {
+				throw error;
+			}
+			console.error('Guard TenantBase: Error checking tenant expiration:', error);
+			// Don't block on DB errors
 		}
 
 		// Get tenant-id from request headers

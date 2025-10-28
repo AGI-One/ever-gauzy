@@ -331,10 +331,19 @@ export class AuthStrategy extends NbAuthStrategy {
 			}),
 			catchError((err) => {
 				console.log(err);
+				// Extract error message from backend response
+				let errorMessages = AuthStrategy.config.login.defaultErrors;
+
+				if (err?.error?.message) {
+					// Backend returned a specific error message
+					errorMessages = [err.error.message];
+				} else if (err?.message) {
+					// Error object has a message property
+					errorMessages = [err.message];
+				}
+
 				return of(
-					new NbAuthResult(false, err, false, AuthStrategy.config.login.defaultErrors, [
-						AuthStrategy.config.login.defaultErrors
-					])
+					new NbAuthResult(false, err, false, errorMessages, [errorMessages])
 				);
 			})
 		);

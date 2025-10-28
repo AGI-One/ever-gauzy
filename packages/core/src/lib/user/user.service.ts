@@ -209,8 +209,29 @@ export class UserService extends TenantAwareCrudService<User> {
 	 */
 	async getOAuthLoginEmail(email: string): Promise<IUser> {
 		try {
-			return await this.typeOrmRepository.findOneByOrFail({ email });
+			const user = await this.typeOrmRepository.findOne({
+				where: { email },
+				relations: { tenant: true }
+			});
+
+			if (!user) {
+				throw new NotFoundException(`The requested record was not found`);
+			}
+
+			// Check if tenant subscription has expired
+			if (user.tenant && user.tenant.expiresAt) {
+				const now = new Date();
+				const isExpired = user.tenant.expiresAt < now;
+				if (isExpired) {
+					throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
+				}
+			}
+
+			return user;
 		} catch (error) {
+			if (error instanceof UnauthorizedException) {
+				throw error;
+			}
 			throw new NotFoundException(`The requested record was not found`);
 		}
 	}
@@ -529,7 +550,10 @@ export class UserService extends TenantAwareCrudService<User> {
 			query.setFindOptions({
 				join: {
 					alias: 'user',
-					leftJoin: { role: 'user.role' }
+					leftJoin: {
+						role: 'user.role',
+						tenant: 'user.tenant'
+					}
 				}
 			});
 			query.where((query: SelectQueryBuilder<User>) => {
@@ -552,6 +576,16 @@ export class UserService extends TenantAwareCrudService<User> {
 				query.orderBy(p(`"${query.alias}"."createdAt"`), 'DESC');
 			});
 			const user = await query.getOneOrFail();
+
+			// Check if tenant subscription has expired
+			if (user.tenant && user.tenant.expiresAt) {
+				const now = new Date();
+				const isExpired = user.tenant.expiresAt < now;
+				if (isExpired) {
+					throw new UnauthorizedException('Your organization subscription has expired. Please renew your subscription to continue.');
+				}
+			}
+
 			const isRefreshTokenMatching = await bcrypt.compare(refreshToken, user.refreshToken);
 
 			if (isRefreshTokenMatching) {

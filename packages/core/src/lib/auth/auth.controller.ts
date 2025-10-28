@@ -53,7 +53,7 @@ export class AuthController {
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
 		private readonly commandBus: CommandBus
-	) {}
+	) { }
 
 	/**
 	 * Check if the user is authenticated.
