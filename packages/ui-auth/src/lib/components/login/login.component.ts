@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } f
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroupDirective } from '@angular/forms';
 import { NbAuthService, NbLoginComponent, NB_AUTH_OPTIONS } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
 import { CookieService } from 'ngx-cookie-service';
 import { RolesEnum } from '@gauzy/contracts';
 import { environment } from '@gauzy/ui-config';
@@ -26,7 +25,6 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 
 	constructor(
 		private readonly cookieService: CookieService,
-		private readonly toastrService: NbToastrService,
 		private readonly route: ActivatedRoute,
 		public readonly nbAuthService: NbAuthService,
 		public readonly cdr: ChangeDetectorRef,
@@ -48,7 +46,7 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 	}
 
 	/**
-	 * Check for OAuth error in query params and show toast
+	 * Check for OAuth error in query params and handle with NbAuthResult
 	 */
 	checkAuthError() {
 		this.route.queryParams.subscribe((params) => {
@@ -68,9 +66,10 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 			}
 
 			if (errorMessage) {
-				this.toastrService.danger(errorMessage, 'Authentication Failed', {
-					duration: 5000
-				});
+				// Set error using NbAuthResult pattern instead of direct toast
+				this.errors = [errorMessage];
+				this.showMessages.error = true;
+
 				// Remove error param from URL
 				this.router.navigate(['/auth/login'], { replaceUrl: true });
 			}
