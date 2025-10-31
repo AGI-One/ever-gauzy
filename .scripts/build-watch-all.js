@@ -212,7 +212,8 @@ class BuildWatcher {
 		return new Promise((resolve, reject) => {
 			const rimraf = spawn('npx', ['rimraf', 'dist'], {
 				cwd: path.join(__dirname, '..'),
-				stdio: 'pipe'
+				stdio: 'pipe',
+				shell: true
 			});
 
 			let output = '';
@@ -258,7 +259,8 @@ class BuildWatcher {
 					NODE_ENV: 'development',
 					NODE_OPTIONS: '--max-old-space-size=12288'
 				},
-				stdio: 'pipe'
+				stdio: 'pipe',
+				shell: true
 			});
 
 			let output = '';
@@ -320,7 +322,8 @@ class BuildWatcher {
 					NODE_ENV: 'development',
 					NODE_OPTIONS: '--max-old-space-size=12288'
 				},
-				stdio: 'pipe'
+				stdio: 'pipe',
+				shell: true
 			});
 
 			let output = '';
@@ -384,7 +387,8 @@ class BuildWatcher {
 				NODE_ENV: 'development',
 				NODE_OPTIONS: '--max-old-space-size=12288'
 			},
-			stdio: ['ignore', 'pipe', 'pipe']
+			stdio: ['ignore', 'pipe', 'pipe'],
+			shell: true
 		});
 
 		// Handle output with persistent colored prefixes
