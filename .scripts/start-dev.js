@@ -20,7 +20,8 @@ class DevStarter {
 		const watchProcess = spawn('yarn', ['build:package:all:watch'], {
 			cwd: path.join(__dirname, '..'),
 			stdio: ['ignore', 'pipe', 'pipe'],
-			detached: true // Create new process group
+			detached: true, // Create new process group
+			shell: true
 		});
 
 		this.watchProcess = watchProcess;
@@ -94,7 +95,8 @@ class DevStarter {
 			const appProcess = spawn(command, args, {
 				cwd: path.join(__dirname, '..'),
 				stdio: 'inherit',
-				detached: true // Create new process group
+				detached: true, // Create new process group
+				shell: true
 			});
 
 			appProcess.on('close', (code) => {
