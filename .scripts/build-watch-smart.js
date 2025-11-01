@@ -513,6 +513,11 @@ class SmartWatchBuilder {
 			`${this.colors.yellow}🧠 Smart mode: Only rebuild changed packages + dependents${this.colors.reset}\n`
 		);
 
+		// Detect platform and use appropriate no-op command
+		const isWindows = process.platform === 'win32';
+		const noOpCommand = isWindows ? 'echo' : 'true';
+		const noOpArgs = isWindows ? ['file-changed'] : [];
+
 		// Use a simpler approach: just run a dummy command and parse events
 		const watchexecArgs = [
 			'--watch',
@@ -538,11 +543,24 @@ class SmartWatchBuilder {
 			'200ms',
 			'--print-events',
 			'--',
-			'true' // Just run 'true' command (does nothing)
+			noOpCommand,
+			...noOpArgs
 		];
 
 		const watchProcess = spawn('watchexec', watchexecArgs, {
-			stdio: ['ignore', 'pipe', 'pipe']
+			stdio: ['ignore', 'pipe', 'pipe'],
+			shell: true // Enable shell mode for better cross-platform compatibility
+		});
+
+		watchProcess.on('error', (error) => {
+			console.error(`${this.colors.red}💥 Failed to start watchexec: ${error.message}${this.colors.reset}`);
+			console.error(
+				`${this.colors.yellow}💡 Make sure watchexec is installed: cargo install watchexec-cli${this.colors.reset}`
+			);
+			console.error(
+				`${this.colors.yellow}💡 Or install via package manager (brew install watchexec, etc.)${this.colors.reset}`
+			);
+			process.exit(1);
 		});
 
 		watchProcess.stdout.on('data', (data) => {
@@ -606,7 +624,9 @@ class SmartWatchBuilder {
 					!line.includes('[EVENT') &&
 					!line.includes('[Command was successful]') &&
 					!line.includes('[Running:') &&
-					!line.includes('echo file-changed')
+					!line.includes('echo file-changed') &&
+					!line.includes('[Command exited with 0]') &&
+					!line.trim() !== 'file-changed'
 				) {
 					console.error(`${this.colors.red}[watchexec ERROR]${this.colors.reset} ${line}`);
 				}
