@@ -8,29 +8,34 @@ console.log('Using custom Webpack Config -> process.cwd: ' + process.cwd());
 
 module.exports = composePlugins(
 	withNx({
-		target: 'node', // Target for Node.js
+		target: 'node' // Target for Node.js
 	}),
 	(config) => {
 		// Watch options
 		config.watchOptions = {
 			ignored: ['**/node_modules/**', '**/dist/**', '**/public/**/*'], // Ignore unnecessary folders
 			aggregateTimeout: 300, // Delay rebuild slightly
-			poll: false, // Disable polling
+			poll: false // Disable polling
 		};
 
-		// Source directory where packages are built
-		const distPackagesDir = path.resolve(__dirname, '../../../dist/packages');
-		const targetNodeModulesDir = path.resolve(__dirname, '../../../dist/apps/api/node_modules/@gauzy');
+		// Skip package copying in dev mode if SKIP_PACKAGE_COPY is set
+		const skipPackageCopy = process.env.SKIP_PACKAGE_COPY === 'true';
 
-		// Get copy patterns from utility function
-		console.time('✔️ Copying all built package folders to dist node_modules');
-		const packagePatterns = getCopyPatterns(distPackagesDir, targetNodeModulesDir);
-		console.timeEnd('✔️ Copying all built package folders to dist node_modules');
+		if (!skipPackageCopy) {
+			// Source directory where packages are built
+			const distPackagesDir = path.resolve(__dirname, '../../../dist/packages');
+			const targetNodeModulesDir = path.resolve(__dirname, '../../../dist/apps/api/node_modules/@gauzy');
 
-		// Add CopyWebpackPlugin with the generated patterns
-		config.plugins.push(
-			new CopyWebpackPlugin({ patterns: packagePatterns })
-		);
+			// Get copy patterns from utility function
+			console.time('✔️ Copying all built package folders to dist node_modules');
+			const packagePatterns = getCopyPatterns(distPackagesDir, targetNodeModulesDir);
+			console.timeEnd('✔️ Copying all built package folders to dist node_modules');
+
+			// Add CopyWebpackPlugin with the generated patterns
+			config.plugins.push(new CopyWebpackPlugin({ patterns: packagePatterns }));
+		} else {
+			console.log('🚀 Skipping package copy - using external watch build');
+		}
 
 		return config;
 	}

@@ -6,7 +6,9 @@ const { spawn } = require('child_process');
 let glob;
 try {
 	glob = require('glob');
+	console.log('✅ Using glob for file pattern matching');
 } catch (e) {
+	console.log('⚠️  Glob not available, using fallback recursive method');
 	// Will use fs.readdirSync as fallback
 }
 
@@ -188,12 +190,16 @@ class SmartWatchBuilder {
 		const sourceDir = path.join(this.packagesDir, 'core/src');
 		const targetDir = path.join(__dirname, '../dist/packages/core/src');
 
+		console.log(`  ${this.colors.gray}📂 Checking asset copy: ${sourceDir} -> ${targetDir}${this.colors.reset}`);
+
 		if (!fs.existsSync(sourceDir)) {
+			console.log(`  ${this.colors.yellow}⚠️  Source directory not found: ${sourceDir}${this.colors.reset}`);
 			return;
 		}
 
 		// Create target directory if not exists
 		if (!fs.existsSync(targetDir)) {
+			console.log(`  ${this.colors.gray}📁 Creating target directory: ${targetDir}${this.colors.reset}`);
 			fs.mkdirSync(targetDir, { recursive: true });
 		}
 
@@ -201,6 +207,7 @@ class SmartWatchBuilder {
 
 		if (glob) {
 			// Use glob if available
+			console.log(`  ${this.colors.gray}🔍 Using glob to find assets...${this.colors.reset}`);
 			const assetPatterns = ['**/*.gql', '**/*.hbs', '**/*.mjml', '**/*.csv', '**/*.json'];
 
 			assetPatterns.forEach((pattern) => {
@@ -209,6 +216,10 @@ class SmartWatchBuilder {
 					nodir: true,
 					ignore: ['**/node_modules/**', '**/*.spec.*', '**/*.test.*']
 				});
+
+				console.log(
+					`  ${this.colors.gray}    Pattern ${pattern}: found ${files.length} files${this.colors.reset}`
+				);
 
 				files.forEach((sourceFile) => {
 					const relativePath = path.relative(sourceDir, sourceFile);
@@ -223,16 +234,22 @@ class SmartWatchBuilder {
 					// Copy file
 					fs.copyFileSync(sourceFile, targetFile);
 					copiedCount++;
+					console.log(`  ${this.colors.gray}    📄 Copied: ${relativePath}${this.colors.reset}`);
 				});
 			});
 		} else {
 			// Fallback: simple recursive copy of asset files
+			console.log(`  ${this.colors.gray}🔍 Using fallback recursive copy...${this.colors.reset}`);
 			copiedCount = this.copyAssetsRecursive(sourceDir, targetDir);
 		}
 
 		if (copiedCount > 0) {
 			console.log(
-				`  ${this.colors.cyan}📄 Copied ${copiedCount} asset files to workspace/dist${this.colors.reset}`
+				`  ${this.colors.cyan}📄 Copied ${copiedCount} asset files to dist/packages/core/src${this.colors.reset}`
+			);
+		} else {
+			console.log(
+				`  ${this.colors.yellow}📄 No asset files found to copy (or all files are up to date)${this.colors.reset}`
 			);
 		}
 	}
@@ -241,26 +258,44 @@ class SmartWatchBuilder {
 	copyAssetsRecursive(sourceDir, targetDir, copiedCount = 0) {
 		const assetExtensions = ['.gql', '.hbs', '.mjml', '.csv', '.json'];
 
-		const items = fs.readdirSync(sourceDir, { withFileTypes: true });
+		try {
+			const items = fs.readdirSync(sourceDir, { withFileTypes: true });
 
-		items.forEach((item) => {
-			const sourcePath = path.join(sourceDir, item.name);
-			const targetPath = path.join(targetDir, item.name);
+			items.forEach((item) => {
+				const sourcePath = path.join(sourceDir, item.name);
+				const targetPath = path.join(targetDir, item.name);
 
-			if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
-				// Recurse into directory
-				if (!fs.existsSync(targetPath)) {
-					fs.mkdirSync(targetPath, { recursive: true });
+				if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
+					// Recurse into directory
+					if (!fs.existsSync(targetPath)) {
+						fs.mkdirSync(targetPath, { recursive: true });
+					}
+					copiedCount = this.copyAssetsRecursive(sourcePath, targetPath, copiedCount);
+				} else if (item.isFile()) {
+					const ext = path.extname(item.name);
+					if (
+						assetExtensions.includes(ext) &&
+						!item.name.includes('.spec.') &&
+						!item.name.includes('.test.')
+					) {
+						try {
+							fs.copyFileSync(sourcePath, targetPath);
+							copiedCount++;
+							const relativePath = path.relative(this.packagesDir, sourcePath);
+							console.log(`  ${this.colors.gray}    📄 Copied: ${relativePath}${this.colors.reset}`);
+						} catch (copyError) {
+							console.log(
+								`  ${this.colors.red}❌ Failed to copy ${item.name}: ${copyError.message}${this.colors.reset}`
+							);
+						}
+					}
 				}
-				copiedCount = this.copyAssetsRecursive(sourcePath, targetPath, copiedCount);
-			} else if (item.isFile()) {
-				const ext = path.extname(item.name);
-				if (assetExtensions.includes(ext) && !item.name.includes('.spec.') && !item.name.includes('.test.')) {
-					fs.copyFileSync(sourcePath, targetPath);
-					copiedCount++;
-				}
-			}
-		});
+			});
+		} catch (readError) {
+			console.log(
+				`  ${this.colors.red}❌ Failed to read directory ${sourceDir}: ${readError.message}${this.colors.reset}`
+			);
+		}
 
 		return copiedCount;
 	}
@@ -301,7 +336,7 @@ class SmartWatchBuilder {
 			});
 
 			buildProcess.stderr.on('data', (data) => {
-				process.stderr.write(`  ${this.colors.red}[${packageName}] ERROR:${this.colors.reset} ${data}`);
+				process.stderr.write(`  ${this.colors.green}[${packageName}]:${this.colors.reset} ${data}`);
 			});
 
 			buildProcess.on('close', (code) => {
@@ -319,6 +354,8 @@ class SmartWatchBuilder {
 							console.log(
 								`  ${this.colors.yellow}⚠️  Asset copy failed: ${error.message}${this.colors.reset}`
 							);
+							// Log the error details for debugging
+							console.log(`  ${this.colors.gray}Error details: ${error.stack}${this.colors.reset}`);
 						}
 					}
 
@@ -347,6 +384,20 @@ class SmartWatchBuilder {
 					`${this.colors.magenta}📋 Progress: ${i + 1}/${this.allPackages.length}${this.colors.reset}`
 				);
 				await this.buildPackage(packageName);
+			}
+
+			// Force copy core assets after initial build is complete
+			if (this.allPackages.includes('core')) {
+				console.log(
+					`${this.colors.cyan}🔄 Force copying core assets after initial build...${this.colors.reset}`
+				);
+				try {
+					this.copyAssetsForCore();
+				} catch (error) {
+					console.log(
+						`  ${this.colors.yellow}⚠️  Post-build asset copy failed: ${error.message}${this.colors.reset}`
+					);
+				}
 			}
 
 			const totalDuration = ((Date.now() - totalStartTime) / 1000).toFixed(1);
