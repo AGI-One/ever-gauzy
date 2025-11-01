@@ -554,8 +554,12 @@ class SmartWatchBuilder {
 
 		watchProcess.on('error', (error) => {
 			console.error(`${this.colors.red}💥 Failed to start watchexec: ${error.message}${this.colors.reset}`);
-			console.error(`${this.colors.yellow}💡 Make sure watchexec is installed: cargo install watchexec-cli${this.colors.reset}`);
-			console.error(`${this.colors.yellow}💡 Or install via package manager (brew install watchexec, etc.)${this.colors.reset}`);
+			console.error(
+				`${this.colors.yellow}💡 Make sure watchexec is installed: cargo install watchexec-cli${this.colors.reset}`
+			);
+			console.error(
+				`${this.colors.yellow}💡 Or install via package manager (brew install watchexec, etc.)${this.colors.reset}`
+			);
 			process.exit(1);
 		});
 
