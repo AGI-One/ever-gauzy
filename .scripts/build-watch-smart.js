@@ -628,7 +628,7 @@ class SmartWatchBuilder {
 					!line.includes('[Command exited with 0]') &&
 					!line.trim() !== 'file-changed'
 				) {
-					console.error(`${this.colors.red}[watchexec ERROR]${this.colors.reset} ${line}`);
+					console.error(`${this.colors.blue}[watchexec]${this.colors.reset} ${line}`);
 				}
 			});
 		});
@@ -636,7 +636,7 @@ class SmartWatchBuilder {
 		watchProcess.stderr.on('data', (data) => {
 			const error = data.toString().trim();
 			if (error) {
-				console.error(`${this.colors.red}[watchexec ERROR]${this.colors.reset} ${error}`);
+				console.error(`${this.colors.blue}[watchexec]${this.colors.reset} ${error}`);
 			}
 		});
 
