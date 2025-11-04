@@ -66,5 +66,6 @@ export const richTextCKEditorConfig: CKEditor4.Config = {
 		{ name: 'styles', items: ['Format', 'Link', 'Heading'] }
 	],
 	toolbarCanCollapse: true,
-	format_tags: 'p;h1;h2;pre'
+	format_tags: 'p;h1;h2;pre',
+	versionCheck: false
 };
