@@ -23,3 +23,9 @@ Thiết lập mục tiêu ở cấp tổ chức/đội/nhân viên, đo lường
 5) Đánh giá cuối kỳ
    - Đánh giá mức độ đạt mục tiêu; ghi nhận bài học và điều chỉnh cho kỳ sau.
 
+Mẹo vận hành
+- Áp dụng nguyên tắc SMART cho mục tiêu: Specific, Measurable, Achievable, Relevant, Time-bound.
+- Hạn chế số lượng mục tiêu (3-5 OKR/kỳ) để tập trung nguồn lực.
+- Công khai mục tiêu trong tổ chức để tăng tính minh bạch và liên kết.
+- Tổ chức review định kỳ (bi-weekly/monthly) để điều chỉnh KR kịp thời thay vì chờ đến cuối kỳ.
+

@@ -27,3 +27,9 @@ Quản lý công việc hằng ngày: kế hoạch, giao việc, theo dõi tiế
    - Đóng nhiệm vụ khi đạt tiêu chí; liên kết với hóa đơn (nếu bill theo giờ).
    - Rút kinh nghiệm (lessons learned) và cập nhật mẫu quy trình nếu cần.
 
+Mẹo vận hành
+- Sử dụng template nhiệm vụ cho các công việc lặp lại để tiết kiệm thời gian.
+- Ước lượng thời gian thực tế và so sánh với kế hoạch để cải thiện dự toán.
+- Thiết lập quy tắc tự động chuyển trạng thái khi có sự kiện (ví dụ: PR merged → Done).
+- Review định kỳ nhiệm vụ quá hạn và phân tích nguyên nhân để cải tiến quy trình.
+

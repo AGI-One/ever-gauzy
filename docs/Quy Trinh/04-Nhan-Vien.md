@@ -27,3 +27,9 @@ Quản lý hồ sơ nhân sự, hợp đồng, chấm công, nghỉ phép, năng
 6) Rời công ty
    - Quy trình offboarding: bàn giao, khóa tài khoản, quyết toán cuối kỳ.
 
+Mẹo vận hành
+- Số hóa hồ sơ nhân sự để dễ truy xuất và bảo mật tốt hơn lưu trữ giấy.
+- Thiết lập nhắc việc tự động cho hợp đồng sắp hết hạn, đánh giá định kỳ, ngày sinh nhật.
+- Đồng bộ chấm công với bảng lương để giảm sai sót và công sức đối soát.
+- Khuyến khích nhân viên tự cập nhật thông tin cá nhân và theo dõi số phép còn lại.
+

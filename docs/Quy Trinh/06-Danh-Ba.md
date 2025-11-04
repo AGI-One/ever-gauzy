@@ -22,3 +22,9 @@ Lưu trữ và quản lý thông tin liên hệ của khách hàng, đối tác,
    - Cập nhật trạng thái (đang hoạt động/ngừng), thông tin thanh toán, mã số thuế.
    - Định kỳ rà soát dữ liệu, hợp nhất bản ghi trùng, lưu lịch sử thay đổi.
 
+Mẹo vận hành
+- Quy ước chuẩn cách nhập tên công ty (viết hoa, viết tắt) để tránh trùng lặp.
+- Bắt buộc nhập các trường quan trọng (email, số điện thoại, mã số thuế) khi tạo mới.
+- Gắn tag theo ngành nghề, quy mô, vùng miền để dễ phân loại và tìm kiếm.
+- Sử dụng tính năng gộp (merge) khi phát hiện bản ghi trùng thay vì xóa.
+

@@ -26,3 +26,9 @@ Quản lý vòng đời tuyển dụng: nhu cầu nhân sự, đăng tin, tiếp
 6) Báo cáo tuyển dụng
    - Theo dõi time-to-hire, cost-per-hire, nguồn ứng viên hiệu quả, tỷ lệ offer accept.
 
+Mẹo vận hành
+- Xây dựng ngân hàng câu hỏi phỏng vấn theo vị trí và cấp độ để đảm bảo tính nhất quán.
+- Sử dụng scorecard đánh giá ứng viên để giảm thiên kiến và tăng tính khách quan.
+- Duy trì talent pool từ các ứng viên tiềm năng chưa trúng tuyển để rút ngắn thời gian tuyển sau này.
+- Thiết lập quy trình onboarding chuẩn ngay khi ứng viên chấp nhận offer.
+

@@ -24,3 +24,9 @@ Thiết lập khung vận hành: pháp nhân, chi nhánh, cơ cấu phòng ban, 
    - Danh mục sản phẩm/dịch vụ, thẻ/tag, lý do trạng thái, pipeline.
    - Quy định SLA, KPI chung cho toàn tổ chức.
 
+Mẹo vận hành
+- Lập văn bản quy trình (SOP) cho từng cấu hình quan trọng để dễ nhân rộng/khôi phục.
+- Phân quyền theo vai trò (RBAC) thay vì gán quyền cho từng người để dễ quản lý.
+- Sao lưu cấu hình định kỳ, đặc biệt trước khi thay đổi lớn.
+- Kiểm tra nhật ký audit log để phát hiện hành vi bất thường hoặc vi phạm chính sách.
+
