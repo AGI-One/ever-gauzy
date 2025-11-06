@@ -1,0 +1,75 @@
+/**
+ * Desktop Full Resolution Override
+ * Removes all max-width and max-height limitations for desktop app
+ */
+
+// Override the default Nebular layout window mode max width
+$layout-window-mode-max-width: none !important;
+
+// Remove all max-width and max-height limitations globally
+* {
+  max-width: none !important;
+}
+
+// Desktop specific overrides
+nb-layout {
+  max-width: none !important;
+  width: 100% !important;
+
+  .layout {
+    max-width: none !important;
+    width: 100% !important;
+
+    .layout-container {
+      max-width: none !important;
+      width: 100% !important;
+
+      .content {
+        max-width: none !important;
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+// Override window mode media queries to disable layout constraints
+@media screen and (min-width: 1920px) {
+  nb-layout.window-mode {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+// Remove height limitations for desktop cards and containers
+.card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+.dashboard-card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+// Desktop dialog overrides
+nb-dialog-container {
+  nb-card {
+    max-height: none !important;
+    max-width: none !important;
+  }
+}
+
+// Full width utilization for desktop main content areas
+.main-content,
+.content-area,
+.page-content {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Override any desktop component max-widths
+ga-desktop,
+ga-layout,
+[class*="ga-"] {
+  max-width: none !important;
+}

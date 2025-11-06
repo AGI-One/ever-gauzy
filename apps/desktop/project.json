@@ -42,7 +42,9 @@
 					"node_modules/@ng-select/ng-select/themes/default.theme.css",
 					"apps/desktop/src/assets/styles/styles.scss",
 					"apps/desktop/src/styles.css",
-					"packages/ui-core/static/styles/styles.scss"
+					"packages/ui-core/static/styles/styles.scss",
+					"apps/desktop/src/desktop-full-resolution-override.scss",
+					"apps/desktop/src/desktop-enhanced-full-resolution.css"
 				],
 				"scripts": [],
 				"allowedCommonJsDependencies": ["@datorama/akita", "localforage", "rxjs", "rxjs/operators"]

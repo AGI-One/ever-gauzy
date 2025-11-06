@@ -54,7 +54,9 @@
 					"node_modules/@ali-hm/angular-tree-component/css/angular-tree-component.css",
 					"node_modules/leaflet/dist/leaflet.css",
 					"apps/agent/src/assets/styles/styles.scss",
-					"node_modules/@ng-select/ng-select/themes/default.theme.css"
+					"node_modules/@ng-select/ng-select/themes/default.theme.css",
+					"apps/agent/src/agent-full-resolution-override.scss",
+					"apps/agent/src/agent-enhanced-full-resolution.css"
 				],
 				"scripts": [],
 				"allowedCommonJsDependencies": ["localforage", "rxjs", "rxjs/operators"]

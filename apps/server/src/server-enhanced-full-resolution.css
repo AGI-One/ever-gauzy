@@ -1,0 +1,50 @@
+/**
+ * Server Enhanced Full Resolution CSS
+ */
+
+:root {
+	--layout-window-mode-max-width: none !important;
+}
+
+html,
+body {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* Server layout components */
+nb-layout,
+.server-layout,
+.server-app {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Server specific containers */
+.server-container,
+.server-main-content,
+.server-dashboard {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Ultra-wide screen support */
+@media (min-width: 1920px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 2560px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 3840px) {
+	* {
+		max-width: none !important;
+	}
+}

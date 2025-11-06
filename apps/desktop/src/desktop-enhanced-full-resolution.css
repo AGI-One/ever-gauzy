@@ -1,0 +1,77 @@
+/**
+ * Desktop Enhanced Full Resolution CSS
+ * Additional CSS rules for desktop app full resolution
+ */
+
+:root {
+	--layout-window-mode-max-width: none !important;
+	--container-max-width: none !important;
+}
+
+html,
+body {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* Desktop layout components */
+nb-layout,
+nb-layout .layout,
+nb-layout .layout-container,
+nb-layout .layout-container .content {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Desktop cards and containers */
+nb-card,
+.card,
+.container,
+.container-fluid {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Desktop tables and data views */
+angular2-smart-table,
+.smart-table-container,
+table {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+}
+
+/* Desktop specific components */
+.desktop-content,
+.desktop-wrapper,
+.desktop-main {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Ultra-wide desktop screen support */
+@media (min-width: 1920px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 2560px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 3440px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 3840px) {
+	* {
+		max-width: none !important;
+	}
+}

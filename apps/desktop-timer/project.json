@@ -55,7 +55,9 @@
 					"node_modules/@ali-hm/angular-tree-component/css/angular-tree-component.css",
 					"node_modules/leaflet/dist/leaflet.css",
 					"apps/desktop-timer/src/assets/styles/styles.scss",
-					"node_modules/@ng-select/ng-select/themes/default.theme.css"
+					"node_modules/@ng-select/ng-select/themes/default.theme.css",
+					"apps/desktop-timer/src/timer-full-resolution-override.scss",
+					"apps/desktop-timer/src/timer-enhanced-full-resolution.css"
 				],
 				"scripts": [],
 				"allowedCommonJsDependencies": ["localforage", "rxjs", "rxjs/operators"]

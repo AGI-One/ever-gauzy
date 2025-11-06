@@ -7,6 +7,9 @@
 @import './material/material-dark';
 @import './material/material-light';
 
+// Override Nebular's default layout window mode max width to support full resolution
+$layout-window-mode-max-width: none !default !global;
+
 $nb-themes: nb-register-theme(
 		(
 			font-family-secondary: font-family-primary,

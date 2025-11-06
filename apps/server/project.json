@@ -51,7 +51,9 @@
 					"node_modules/leaflet/dist/leaflet.css",
 					"apps/server/src/styles.css",
 					"apps/server/src/assets/styles/styles.scss",
-					"node_modules/@ng-select/ng-select/themes/default.theme.css"
+					"node_modules/@ng-select/ng-select/themes/default.theme.css",
+					"apps/server/src/server-full-resolution-override.scss",
+					"apps/server/src/server-enhanced-full-resolution.css"
 				],
 				"scripts": [],
 				"allowedCommonJsDependencies": [

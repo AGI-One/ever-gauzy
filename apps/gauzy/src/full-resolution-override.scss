@@ -1,0 +1,192 @@
+/**
+ * Full Resolution Override
+ * This file removes all max-width and max-height limitations
+ * to allow full resolution usage across all screen sizes
+ */
+
+// Override the default Nebular layout window mode max width
+$layout-window-mode-max-width: none !important;
+
+// Remove all max-width and max-height limitations globally
+* {
+  max-width: none !important;
+}
+
+// Specific overrides for layout components
+nb-layout {
+  max-width: none !important;
+  width: 100% !important;
+
+  .layout {
+    max-width: none !important;
+    width: 100% !important;
+
+    .layout-container {
+      max-width: none !important;
+      width: 100% !important;
+
+      .content {
+        max-width: none !important;
+        width: 100% !important;
+
+        .columns {
+          max-width: none !important;
+          width: 100% !important;
+        }
+      }
+    }
+  }
+}
+
+// Override window mode media queries to disable layout constraints
+@media screen and (min-width: 1920px) {
+  nb-layout.window-mode {
+    max-width: none !important;
+    width: 100% !important;
+
+    .layout {
+      max-width: none !important;
+      width: 100% !important;
+    }
+  }
+}
+
+@media screen and (min-width: 1940px) {
+  nb-layout.window-mode {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+@media screen and (min-width: 2070px) {
+  nb-layout.window-mode {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+@media screen and (min-width: 2220px) {
+  nb-layout.window-mode {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+// Remove height limitations for cards and containers
+.card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+.dashboard-card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+// Remove dialog size limitations
+nb-dialog-container {
+  nb-card {
+    max-height: none !important;
+    max-width: none !important;
+  }
+}
+
+.view-log-dialog {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Remove table height limitations
+.smart-table-container {
+  max-height: none !important;
+  height: auto !important;
+}
+
+angular2-smart-table {
+  max-height: none !important;
+
+  table {
+    max-height: none !important;
+  }
+}
+
+// Remove flex container limitations
+.flex-container,
+.d-flex,
+.row,
+.col,
+[class*="col-"] {
+  max-width: none !important;
+}
+
+// Remove image size limitations where needed for full resolution
+.image,
+.img-responsive,
+.img-fluid {
+  max-width: none !important;
+  max-height: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+// Ensure full width utilization for main content areas
+.main-content,
+.content-area,
+.page-content {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Remove grid system limitations for full resolution
+.container,
+.container-fluid {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Override any specific component max-widths
+ga-dashboard,
+ga-layout,
+ga-header,
+ga-sidebar,
+ga-footer,
+[class*="ga-"] {
+  max-width: none !important;
+}
+
+// Override breakpoint specific max-widths
+@media (min-width: 1200px) {
+  .container {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .container {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 3840px) {
+  .container {
+    max-width: none !important;
+  }
+}

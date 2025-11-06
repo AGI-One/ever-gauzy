@@ -6,6 +6,9 @@
 // material themes
 @import './material/material-dark';
 @import './material/material-light';
+
+// Override Nebular's default layout window mode max width to support full resolution
+$layout-window-mode-max-width: none !default !global;
 // Google Inter font
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 

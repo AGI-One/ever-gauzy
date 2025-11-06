@@ -50,7 +50,10 @@
 					"node_modules/@ali-hm/angular-tree-component/css/angular-tree-component.css",
 					"node_modules/leaflet/dist/leaflet.css",
 					"packages/ui-core/static/styles/styles.scss",
-					"node_modules/@ng-select/ng-select/themes/default.theme.css"
+					"node_modules/@ng-select/ng-select/themes/default.theme.css",
+					"apps/gauzy/src/full-resolution-override.scss",
+					"apps/gauzy/src/enhanced-full-resolution.css",
+					"apps/gauzy/src/css-properties-override.css"
 				],
 				"scripts": [
 					"node_modules/echarts/dist/echarts.min.js",

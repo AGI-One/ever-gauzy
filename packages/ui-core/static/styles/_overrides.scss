@@ -259,6 +259,10 @@ body {
     }
   }
 
+  // Disabled window mode media queries for full resolution support
+  // These media queries are commented out to allow full resolution usage
+
+  /*
   @media screen and (min-width: calc(var(--layout-window-mode-max-width) + 20px)) {
     @include f-window-mode(nb-theme(layout-window-mode-padding-top) / 4);
   }
@@ -270,6 +274,7 @@ body {
   @media screen and (min-width: calc(var(--layout-window-mode-max-width) + 300px)) {
     @include f-window-mode(nb-theme(layout-window-mode-padding-top));
   }
+  */
 
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
     background: nb-theme(background-basic-color-1);

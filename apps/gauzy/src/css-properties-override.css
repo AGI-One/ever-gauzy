@@ -1,0 +1,173 @@
+/**
+ * CSS Custom Properties Override for Full Resolution
+ * This file overrides all CSS custom properties that may limit width/height
+ */
+
+:root {
+	/* Layout constraints override */
+	--layout-window-mode-max-width: none !important;
+	--layout-max-width: none !important;
+	--container-max-width: none !important;
+	--content-max-width: none !important;
+
+	/* Card constraints override */
+	--card-max-width: none !important;
+	--card-max-height: none !important;
+
+	/* Table constraints override */
+	--table-max-width: none !important;
+	--table-max-height: none !important;
+
+	/* Dialog constraints override */
+	--dialog-max-width: none !important;
+	--dialog-max-height: none !important;
+
+	/* Sidebar constraints override */
+	--sidebar-max-width: none !important;
+	--sidebar-max-height: none !important;
+
+	/* Form constraints override */
+	--form-max-width: none !important;
+	--input-max-width: none !important;
+
+	/* Grid constraints override */
+	--grid-max-width: none !important;
+	--column-max-width: none !important;
+}
+
+/* Nebular theme variable overrides */
+html {
+	--layout-window-mode-max-width: none !important;
+}
+
+/* Force full width/height for common patterns */
+*[style*='max-width'] {
+	max-width: none !important;
+}
+
+*[style*='max-height'] {
+	max-height: none !important;
+}
+
+/* Angular Material overrides */
+.mat-dialog-container {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+.mat-card {
+	max-width: none !important;
+}
+
+.mat-table {
+	max-width: none !important;
+}
+
+/* Nebular component overrides */
+nb-layout.window-mode {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+nb-card {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+nb-dialog-container {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+nb-sidebar {
+	max-height: none !important;
+}
+
+/* Bootstrap overrides */
+.container,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl,
+.container-xxl,
+.container-fluid {
+	max-width: none !important;
+}
+
+.row {
+	max-width: none !important;
+}
+
+[class*='col-'] {
+	max-width: none !important;
+}
+
+/* Common component overrides */
+.wrapper,
+.content-wrapper,
+.page-wrapper,
+.app-wrapper {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+.header,
+.footer,
+.main,
+.section,
+.article {
+	max-width: none !important;
+}
+
+/* Table and data display overrides */
+.table-responsive {
+	max-width: none !important;
+}
+
+.data-table,
+.smart-table {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Navigation overrides */
+.nav,
+.navbar,
+.menu {
+	max-width: none !important;
+}
+
+/* Form element overrides */
+.form,
+.form-group,
+.input-group {
+	max-width: none !important;
+}
+
+/* Utility classes for full resolution */
+.w-100 {
+	width: 100% !important;
+	max-width: none !important;
+}
+
+.h-100 {
+	height: 100% !important;
+	max-height: none !important;
+}
+
+.w-auto {
+	max-width: none !important;
+}
+
+.h-auto {
+	max-height: none !important;
+}
+
+/* Remove inline style constraints */
+[style*='width:'] {
+	max-width: none !important;
+}
+
+[style*='height:'] {
+	max-height: none !important;
+}

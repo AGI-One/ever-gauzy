@@ -1,0 +1,208 @@
+/**
+ * Enhanced Full Resolution Override
+ * Additional CSS rules to ensure maximum utilization of screen space
+ */
+
+/* Global CSS Custom Properties Override */
+:root {
+	--layout-window-mode-max-width: none !important;
+	--container-max-width: none !important;
+}
+
+/* Remove ALL max-width and max-height constraints globally */
+html,
+body {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* Layout components */
+nb-layout,
+nb-layout .layout,
+nb-layout .layout-container,
+nb-layout .layout-container .content {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Cards and containers */
+nb-card,
+.card,
+.container,
+.container-fluid,
+.row,
+[class*='col-'] {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Tables and data views */
+angular2-smart-table,
+.smart-table-container,
+table,
+.table-container,
+.data-table,
+.ag-theme-balham,
+.ag-theme-alpine {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+}
+
+/* Scrollable areas */
+.card-scroll,
+.dashboard-card-scroll,
+.scrollable-container,
+.content-scrollable {
+	max-height: none !important;
+	height: 100vh !important;
+}
+
+/* Dialog and modal overrides */
+nb-dialog-container,
+.modal,
+.dialog,
+cdk-overlay-pane {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Form elements */
+nb-select,
+.form-control,
+input,
+textarea {
+	max-width: none !important;
+}
+
+/* Flex containers */
+.d-flex,
+.flex-container,
+.layout-flex {
+	max-width: none !important;
+}
+
+/* Sidebar and navigation */
+nb-sidebar,
+.sidebar,
+.navigation {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Content areas */
+.main-content,
+.page-content,
+.content-area,
+.workspace {
+	max-width: none !important;
+	max-height: none !important;
+	width: 100% !important;
+}
+
+/* Dashboard specific */
+ga-dashboard,
+.dashboard-layout,
+.dashboard-container {
+	max-width: none !important;
+	max-height: none !important;
+}
+
+/* Grid systems */
+.grid,
+.grid-container,
+.masonry-boundary {
+	max-width: none !important;
+}
+
+/* Responsive utilities override */
+@media (min-width: 1200px) {
+	.container,
+	.container-lg,
+	.container-xl {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 1400px) {
+	.container,
+	.container-xxl {
+		max-width: none !important;
+	}
+}
+
+/* Override Bootstrap grid system max-widths */
+@media (min-width: 576px) {
+	.container-sm {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 768px) {
+	.container-md {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 992px) {
+	.container-lg {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	.container-xl {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 1400px) {
+	.container-xxl {
+		max-width: none !important;
+	}
+}
+
+/* Ultra-wide screen support */
+@media (min-width: 1920px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 2560px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 3440px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+@media (min-width: 3840px) {
+	* {
+		max-width: none !important;
+	}
+}
+
+/* Ensure full viewport usage */
+.full-width {
+	width: 100% !important;
+	max-width: none !important;
+}
+
+.full-height {
+	height: 100% !important;
+	max-height: none !important;
+}
+
+.full-viewport {
+	width: 100vw !important;
+	height: 100vh !important;
+	max-width: none !important;
+	max-height: none !important;
+}

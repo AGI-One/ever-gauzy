@@ -1,0 +1,51 @@
+/**
+ * Desktop Timer Full Resolution Override
+ * Removes all max-width and max-height limitations for desktop timer app
+ */
+
+// Override the default Nebular layout window mode max width
+$layout-window-mode-max-width: none !important;
+
+// Remove all max-width and max-height limitations globally
+* {
+  max-width: none !important;
+}
+
+// Timer specific overrides
+nb-layout {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.timer-container,
+.timer-wrapper,
+.time-tracker {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Remove height limitations for timer components
+.card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+// Full width utilization for timer content
+.main-content,
+.content-area {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Ultra-wide screen support for timer
+@media (min-width: 1920px) {
+  * { max-width: none !important; }
+}
+
+@media (min-width: 2560px) {
+  * { max-width: none !important; }
+}
+
+@media (min-width: 3440px) {
+  * { max-width: none !important; }
+}

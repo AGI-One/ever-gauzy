@@ -1,0 +1,51 @@
+/**
+ * Server Full Resolution Override
+ * Removes all max-width and max-height limitations for server app
+ */
+
+// Override the default Nebular layout window mode max width
+$layout-window-mode-max-width: none !important;
+
+// Remove all max-width and max-height limitations globally
+* {
+  max-width: none !important;
+}
+
+// Server specific overrides
+nb-layout {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.server-container,
+.server-wrapper,
+.server-main {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Remove height limitations for server components
+.card-scroll {
+  height: 100vh !important;
+  max-height: none !important;
+}
+
+// Full width utilization for server content
+.main-content,
+.content-area {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Ultra-wide screen support for server
+@media (min-width: 1920px) {
+  * { max-width: none !important; }
+}
+
+@media (min-width: 2560px) {
+  * { max-width: none !important; }
+}
+
+@media (min-width: 3440px) {
+  * { max-width: none !important; }
+}
